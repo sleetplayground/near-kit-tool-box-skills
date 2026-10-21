@@ -33,7 +33,7 @@ tool box for near kit with custom web client and reusable functions
 
 #### SKILLS
 
-
+- [sleet-kit-hello-sleet-near/SKILL.md](./sleet-kit-hello-sleet-near/SKILL.md)
 
 =====================
 <br/>
