@@ -33,6 +33,9 @@ tool box for near kit with custom web client and reusable functions
 
 #### SKILLS
 
+see [TOOLS.md](./TOOLS.md) for the tool boxes, near cli, and explorers
+these skills are sourced from.
+
 - [sleet-kit-hello-sleet-near/SKILL.md](./sleet-kit-hello-sleet-near/SKILL.md)
 - [sleet-kit-wrap-near/SKILL.md](./sleet-kit-wrap-near/SKILL.md)
 - [sleet-kit-near/SKILL.md](./sleet-kit-near/SKILL.md)
