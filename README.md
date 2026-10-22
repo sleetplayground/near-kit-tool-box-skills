@@ -41,10 +41,29 @@ tool box for near kit with custom web client and reusable functions
 - [sleet-kit-pool-near-factory/SKILL.md](./sleet-kit-pool-near-factory/SKILL.md)
 - [sleet-kit-pool-near-staking/SKILL.md](./sleet-kit-pool-near-staking/SKILL.md)
 - [sleet-kit-ft/SKILL.md](./sleet-kit-ft/SKILL.md)
+- [sleet-kit-hos-venear-dao/SKILL.md](./sleet-kit-hos-venear-dao/SKILL.md)
+- [sleet-kit-hos-lockup/SKILL.md](./sleet-kit-hos-lockup/SKILL.md)
+- [sleet-kit-hos-vote-dao/SKILL.md](./sleet-kit-hos-vote-dao/SKILL.md)
+- [sleet-kit-social-near/SKILL.md](./sleet-kit-social-near/SKILL.md)
+- [sleet-kit-rhea-dclv2-ref-labs-near/SKILL.md](./sleet-kit-rhea-dclv2-ref-labs-near/SKILL.md)
+- [sleet-kit-nft-pumpopoly-near/SKILL.md](./sleet-kit-nft-pumpopoly-near/SKILL.md)
+- [sleet-kit-exchequer-pumpopoly-near/SKILL.md](./sleet-kit-exchequer-pumpopoly-near/SKILL.md)
+- [sleet-kit-berryclub-ek-near/SKILL.md](./sleet-kit-berryclub-ek-near/SKILL.md)
+- [sleet-kit-linear-protocol-near/SKILL.md](./sleet-kit-linear-protocol-near/SKILL.md)
+- [sleet-kit-meta-pool-near/SKILL.md](./sleet-kit-meta-pool-near/SKILL.md)
+- [sleet-kit-meme-cooking-near/SKILL.md](./sleet-kit-meme-cooking-near/SKILL.md)
+- [sleet-kit-app-chess-game-near/SKILL.md](./sleet-kit-app-chess-game-near/SKILL.md)
 
 > `pool.near` is split into two skills — `pool-near-factory` is the
 > factory that deploys validator pools, `pool-near-staking` is the
 > per-validator staking pool child contract itself.
+>
+> The house-of-stake set follows the same shape — `hos-venear-dao`
+> deploys each user's `hos-lockup` sub-account, and `hos-vote-dao` is
+> its own contract.
+>
+> Skills marked with an **ARG AND GAS** note have no verified fun
+> helper yet, so they list methods by name and call type only.
 
 =====================
 <br/>
