@@ -139,7 +139,10 @@ returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 
 - this reads the **internal token balances the contract holds for an
   account** — it is not that account's LP position, staked balance, or
-  share count. To read LP positions use the deposit and pool views.
+  share count. For LP positions use `get_deposit` (single pool),
+  `get_pool_total_shares`, `get_pool_shares`, or
+  `get_pool_share_price` — those appear in the method surface below and
+  their arg formats are not documented yet.
 
 ```json
 {
