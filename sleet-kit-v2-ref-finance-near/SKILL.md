@@ -284,19 +284,15 @@ otherwise:
   `get_client_echo_sender_id_whitelist`, `extend_secure_sender_whitelist`,
   `remove_secure_sender_whitelist`, `get_secure_sender_whitelist`
 - **donations** — `donation_share`, `donation_token`
-- **rate updates** — `update_token_rate`, `update_token_rate_callback`,
+- **rate updates** — `update_token_rate`,
   `stable_swap_ramp_amp`, `stable_swap_stop_ramp_amp`
 - **lostfound** — `get_lostfound_token`, `list_lostfound_tokens`, `claim_lostfound`
-- **shadow / liquidation callbacks** — `shadow_action`, `get_shadow_records`,
-  `on_burrow_liquidation`, `callback_on_shadow`, `callback_on_burrow_liquidation`
-- **exchange withdraw callbacks** — `exchange_callback_post_withdraw_near`,
-  `exchange_callback_post_withdraw`,
-  `exchange_callback_post_ft_transfer_call_withdraw`
-- **oracle callbacks** — `batch_update_degen_token_by_price_oracle_callback`,
-  `batch_update_degen_token_by_pyth_oracle_callback`,
-  `update_degen_token_price_callback`
+- **shadow records** — `get_shadow_records`
 - **misc reads** — `version`, `get_tokens_paged`, `list_rated_tokens`,
   `batch_views`
+
+Internal callback, initializer, upgrade, and cross-contract plumbing is
+omitted here — those are never called directly.
 
 ==========================
 <br/>

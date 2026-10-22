@@ -1,8 +1,6 @@
 ---
 name: sleet-kit-world-pumpopoly-near
 description: Documents the world.pumpopoly.near monopoly-style game contract - its mainnet contract id, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions world.pumpopoly.near, pumpopoly, the monopoly game contract, view_player, view_players, move_player, or elite_move - including when they want to call or inspect this contract and need the method list, argument names, or contract id.
----
-
 # world.pumpopoly.near
 
 the pumpopoly world.pumpopoly near monopoly-style game smart contract
@@ -179,60 +177,6 @@ CONTRACT ID PER NETWORK
 ### set_player_balance - CALL
 
 - arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### new - CALL
-
-- private initializer — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_elite_build - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_elite_move - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_exchequer_claim_bond - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_buy_tokens - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_nft_export - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### on_mint_request_settlement - CALL
-
-- private callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### nft_on_transfer - CALL
-
-- NEP-177 callback — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### ft_on_transfer - CALL
-
-- NEP-141 callback — not documented yet
 - gas: not documented yet
 - attached deposit: not documented yet
 

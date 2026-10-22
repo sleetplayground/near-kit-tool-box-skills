@@ -1,8 +1,6 @@
 ---
 name: sleet-kit-wrap-near
 description: Documents the wrap.near wNEAR contract - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions wrap.near, wrap.testnet, wNEAR, wrapping or unwrapping NEAR, near_deposit, or near_withdraw, or asks what arguments a wrapping contract method takes - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
----
-
 # wrap.near
 
 the wrap.near wNEAR (NEP-141 wrapped NEAR) smart contract
@@ -86,12 +84,6 @@ CONTRACT ID PER NETWORK
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
-### ft_resolve_transfer - CALL
-
-- private / callback method — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
 ### storage_deposit - CALL
 
 - no args necessary
@@ -100,12 +92,6 @@ CONTRACT ID PER NETWORK
   `storage_minimum_balance` to read the current value
 
 ### storage_withdraw - CALL
-
-- no args necessary
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### storage_unregister - CALL
 
 - no args necessary
 - gas: not documented yet
@@ -133,12 +119,6 @@ CONTRACT ID PER NETWORK
 - no args necessary
 - gas: none — a view call is read-only and free
 - attached deposit: 0
-
-### new - CALL
-
-- private initializer — not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
 
 ==========================
 <br/>
