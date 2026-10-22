@@ -5,7 +5,8 @@ description: Documents the NEAR validator staking-pool child contracts - how to 
 
 The standard NEAR validator staking-pool child contracts. There is no
 single canonical id — staking pools are deployed per-validator, and
-the fun helpers take the concrete pool account id as a parameter.
+every call needs the concrete pool account id of the validator you
+want to interact with.
 
 On mainnet the validator's pool account id is typically
 `<validator>.pool.near` (deployed by the v2 factory) or

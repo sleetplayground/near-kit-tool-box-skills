@@ -19,10 +19,11 @@ This contract deploys each user's lockup sub-account (e.g.
 
 > #### ARG AND GAS
 >
-> No fun helper exists for this contract yet, so no argument format,
-> gas, or attached deposit has been verified. Every method below is
-> listed as callable or read-only by name only. Get the authoritative
-> signatures before using any of them:
+> No argument format, gas, or attached deposit has been confirmed for
+> this contract. Every method below is listed as callable or read-only
+> by name only — treat the list as a starting point, not a
+> specification. Get the authoritative signatures before using any of
+> them:
 >
 > ```sh
 > near contract inspect venear.dao network-config mainnet now

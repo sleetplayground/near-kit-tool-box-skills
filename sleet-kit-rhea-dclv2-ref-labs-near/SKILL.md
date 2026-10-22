@@ -496,22 +496,6 @@ above zero before using this with value
 - gas: not documented yet
 - attached deposit: not documented yet
 
-### ft_transfer_call (helper: deposit) - CALL
-
-deposits a token into the DEX — the helper is `dclv2_deposit`, and
-`msg` is the JSON string `"Deposit"`, including its quotes
-
-```json
-{
-  "receiver_id": "sleet.near",
-  "amount": "1000000000000000000000000",
-  "msg": "\"Deposit\""
-}
-```
-
-- gas: 1000 Tgas
-- attached deposit: 1 yoctoNEAR
-
 ### withdraw_asset - CALL
 
 ```json
@@ -566,21 +550,6 @@ the minimum from `storage_balance_bounds` is **not** enough in practice
 
 - no args necessary
 - gas: 300 Tgas
-- attached deposit: 1 yoctoNEAR
-
-### ft_transfer_call (helper: swap) - CALL
-
-performs a swap via `ft_transfer_call`
-
-```json
-{
-  "receiver_id": "sleet.near",
-  "amount": "1000000000000000000000000",
-  "msg": ""
-}
-```
-
-- gas: 180 Tgas
 - attached deposit: 1 yoctoNEAR
 
 ### create_pool - CALL
@@ -763,12 +732,6 @@ performs a swap via `ft_transfer_call`
 - gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
-### mft_transfer_call - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
 ### mft_transfer_all_call - CALL
 
 - arg format not documented yet
@@ -799,12 +762,6 @@ performs a swap via `ft_transfer_call`
 - attached deposit: 0
 
 ### nft_transfer - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### nft_transfer_call - CALL
 
 - arg format not documented yet
 - gas: not documented yet
@@ -879,6 +836,53 @@ performs a swap via `ft_transfer_call`
 - no args necessary
 - gas: none — a view call is read-only and free
 - attached deposit: 0
+
+---
+
+#### TOKEN TRANSFERS
+
+These are **not methods on this contract**. They are the standard
+`ft_transfer` / `ft_transfer_call` calls made **on the token contract
+you want to move** — `wrap.near`, `usdc.tether-token.near`, or any
+other FT — with this DEX as the `receiver_id`.
+
+##### ft_transfer_call on the input token - CALL
+
+a swap does not call a `swap` method on this contract. It calls
+`ft_transfer_call` on the **input token**, which routes into this
+contract. `msg` carries the swap as a nested `Swap` object.
+
+```json
+{
+  "receiver_id": "dclv2.ref-labs.near",
+  "amount": "1000000000000000000000000",
+  "msg": "{\"Swap\":{\"pool_ids\":[1],\"output_token\":\"usdc.tether-token.near\",\"min_output_amount\":\"0\"}}"
+}
+```
+
+- `pool_ids` is the ordered route through pools
+- set `min_output_amount` from a `quote` view result with your
+  slippage applied — `"0"` accepts any output price
+- the output token must have storage registered for the signer or the
+  swap fails
+- gas: 180 Tgas
+- attached deposit: 1 yoctoNEAR
+
+##### ft_transfer_call on the input token - CALL (deposit)
+
+depositing a token into the DEX uses the same call with a `Deposit` msg
+
+```json
+{
+  "receiver_id": "dclv2.ref-labs.near",
+  "amount": "1000000000000000000000000",
+  "msg": "\"Deposit\""
+}
+```
+
+- `msg` is the JSON string `"Deposit"`, including its quotes
+- gas: 1000 Tgas
+- attached deposit: 1 yoctoNEAR
 
 ==========================
 <br/>

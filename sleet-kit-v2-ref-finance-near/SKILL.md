@@ -206,11 +206,19 @@ returns a `{ token_id: amount }` map
 
 ---
 
+#### TOKEN TRANSFERS
+
+`mft_transfer`, `mft_transfer_call`, and the `ft_on_transfer` entry
+appear on this contract, but the **MFT transfer calls are made on the
+token or pool contract you want to move**, with this DEX as the
+receiver — not on `v2.ref-finance.near` itself. For the standard
+NEP-141 shape see the `ft` skill.
+
 #### FULL METHOD SURFACE
 
 This contract exposes **162 methods** as reported by
 `near contract inspect`. Only the methods documented above have a
-verified argument format in the tool box.
+verified argument format.
 
 For any method not listed above, the arg format is **not documented
 yet**. To get the authoritative list and signatures for your network:

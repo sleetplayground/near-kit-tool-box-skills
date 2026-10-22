@@ -25,14 +25,12 @@ CONTRACT ID PER NETWORK
 >
 > #### SOURCING
 >
-> `create_account` is verified by a fun helper that builds and sends
-> this JSON. The arg shapes for `create_account_advanced`, `send`,
-> `get_key_balance`, and `get_key_information` come from the typed
-> contract `NEAR_TLD_CONTRACT_TRAIT` in the rust tool box, not from an
-> executed helper — check them against
+> The arg shapes for `create_account_advanced`, `send`,
+> `get_key_balance`, and `get_key_information` are **not yet
+> confirmed against a live contract** — check them against
 > `near contract inspect near network-config mainnet now` before
-> relying on them. That trait names the key field `key` on the two
-> views and `public_key` on `send`, which may not both be correct.
+> relying on them. This contract names the key field `key` on the two
+> views and `public_key` on `send`.
 
 ### get_key_balance - VIEW
 
