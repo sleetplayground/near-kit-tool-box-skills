@@ -27,7 +27,7 @@ CONTRACT ID PER NETWORK
 
 ```json
 {
-  "public_key": "ed25519:..."
+  "key": "ed25519:..."
 }
 ```
 
@@ -38,7 +38,7 @@ CONTRACT ID PER NETWORK
 
 ```json
 {
-  "public_key": "ed25519:..."
+  "key": "ed25519:..."
 }
 ```
 
