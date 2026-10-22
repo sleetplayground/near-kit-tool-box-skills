@@ -65,7 +65,7 @@ CONTRACT ID PER NETWORK
 
 - no args necessary — the contract infers the player from the signer
 - gas: 60 Tgas
-- attached deposit: not documented yet — use 0 unless the contract
+- attached deposit: 0 unless the contract
   requires gas staking for the move
 
 ### elite_move - CALL
@@ -77,7 +77,7 @@ CONTRACT ID PER NETWORK
 ```
 
 - gas: 100 Tgas
-- attached deposit: not documented yet — use 0 unless the contract
+- attached deposit: 0 unless the contract
   requires gas staking for the move
 
 ### build - CALL

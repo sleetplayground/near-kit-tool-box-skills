@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-pool-near-staking
-description: Documents the NEAR validator staking-pool child contracts - the per-validator pool account ids such as everything.pool.near, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions a staking pool, deposit_and_stake, get_pool_summary, staked or unstaked balances on a pool, or a pool account id like everything.pool.near - including when they want to call or inspect a staking pool and need the method list, argument names, or which pool id to use. For the pool.near factory contract that deploys these pools, use the factory skill instead.
+description: Documents the NEAR validator staking-pool child contracts - how to resolve the per-validator pool account id, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions a staking pool, deposit_and_stake, get_pool_summary, staked or unstaked balances on a pool, or a pool account id like <validator>.pool.near - including when they want to call or inspect a staking pool and need the method list, argument names, or which pool id to use. For the pool.near factory contract that deploys these pools, use the factory skill instead.
 ---
 
 # staking pools
@@ -19,13 +19,6 @@ CONTRACT ID PER NETWORK
 
 - MAINNET: per-validator — `<validator>.pool.near` or `<validator>.poolv1.near`
 - TESTNET: (none)
-
-KNOWN POOLS (v2 hash)
-
-- everything.pool.near
-- shitzu.pool.near
-- shadowcorp.pool.near
-- intear.pool.near
 
 > Aurorapool (`<validator>.pool.near` for aurora) runs a **patched**
 > v2 pool. Method surface matches but **always verify code_hash at the
@@ -67,14 +60,14 @@ KNOWN POOLS (v2 hash)
 ### deposit_and_stake - CALL
 
 - no args necessary — the amount is the attached deposit
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: the NEAR amount to deposit and stake in the same
   transaction
 
 ### deposit - CALL
 
 - no args necessary — the amount is the attached deposit
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: the NEAR amount to deposit
 
 ### withdraw - CALL
@@ -86,7 +79,7 @@ KNOWN POOLS (v2 hash)
 ### withdraw_all - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### unstake - CALL
@@ -98,7 +91,7 @@ KNOWN POOLS (v2 hash)
 ### unstake_all - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### stake - CALL
@@ -110,7 +103,7 @@ KNOWN POOLS (v2 hash)
 ### stake_all - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0
 
 ### burn - CALL

@@ -44,7 +44,7 @@ acceptable output.
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0
 
 > `min_amount_out` of `"0"` in the example is a placeholder that
@@ -66,7 +66,7 @@ acceptable output.
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0
 
 ### remove_liquidity - CALL
@@ -86,7 +86,7 @@ acceptable output.
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0
 
 ### get_pool - VIEW
@@ -155,7 +155,7 @@ returns a `{ token_id: amount }` map
 ### storage_deposit - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0.00125 NEAR — the standard NEP-145 storage
   minimum, though some pools require more; check
   `storage_balance_bounds` when a deposit fails

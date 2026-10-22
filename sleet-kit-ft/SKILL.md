@@ -74,7 +74,7 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 ### storage_deposit - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 0.00125 NEAR — the standard NEP-145 storage
   minimum, though some tokens require more; check
   `storage_balance_bounds` when a deposit fails
@@ -82,13 +82,13 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 ### storage_withdraw - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### storage_unregister - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### ft_transfer - CALL
@@ -100,7 +100,7 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR — the contract requires exactly this
 
 ### ft_transfer_call - CALL

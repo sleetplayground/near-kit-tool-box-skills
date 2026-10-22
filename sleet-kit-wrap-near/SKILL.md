@@ -30,7 +30,7 @@ CONTRACT ID PER NETWORK
 ### near_deposit - CALL
 
 - no args necessary — the amount is the attached deposit
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: the amount of NEAR to wrap, e.g. `1 NEAR`
 
 ### near_withdraw - CALL
@@ -41,7 +41,7 @@ CONTRACT ID PER NETWORK
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### ft_transfer - CALL
@@ -53,7 +53,7 @@ CONTRACT ID PER NETWORK
 }
 ```
 
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### ft_transfer_call - CALL
@@ -95,20 +95,20 @@ CONTRACT ID PER NETWORK
 ### storage_deposit - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: the NEP-145 storage minimum — view
   `storage_minimum_balance` to read the current value
 
 ### storage_withdraw - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### storage_unregister - CALL
 
 - no args necessary
-- gas: not documented yet — use the default
+- gas: not documented yet
 - attached deposit: 1 yoctoNEAR
 
 ### storage_balance_bounds - VIEW
