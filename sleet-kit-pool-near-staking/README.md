@@ -1,0 +1,7 @@
+# sleet-kit-pool-near-staking
+
+see [SKILL.md](./SKILL.md)
+
+=====================
+<br/>
+copyright 2026 by sleet.near

@@ -34,6 +34,17 @@ tool box for near kit with custom web client and reusable functions
 #### SKILLS
 
 - [sleet-kit-hello-sleet-near/SKILL.md](./sleet-kit-hello-sleet-near/SKILL.md)
+- [sleet-kit-wrap-near/SKILL.md](./sleet-kit-wrap-near/SKILL.md)
+- [sleet-kit-near/SKILL.md](./sleet-kit-near/SKILL.md)
+- [sleet-kit-v2-ref-finance-near/SKILL.md](./sleet-kit-v2-ref-finance-near/SKILL.md)
+- [sleet-kit-world-pumpopoly-near/SKILL.md](./sleet-kit-world-pumpopoly-near/SKILL.md)
+- [sleet-kit-pool-near-factory/SKILL.md](./sleet-kit-pool-near-factory/SKILL.md)
+- [sleet-kit-pool-near-staking/SKILL.md](./sleet-kit-pool-near-staking/SKILL.md)
+- [sleet-kit-ft/SKILL.md](./sleet-kit-ft/SKILL.md)
+
+> `pool.near` is split into two skills — `pool-near-factory` is the
+> factory that deploys validator pools, `pool-near-staking` is the
+> per-validator staking pool child contract itself.
 
 =====================
 <br/>
