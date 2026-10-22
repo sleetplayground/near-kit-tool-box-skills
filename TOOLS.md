@@ -56,26 +56,19 @@ substitute the contract id for the one you need. for per-validator
 staking pools and per-user lockups, substitute the concrete account id
 — `<validator>.pool.near` or `<user>.lockup.near`.
 
--🌐 DOCS: https://docs.near.org/
-
 ---
 
-#### FASTNEAR
+#### FASTNEAR TRANSACTIONS API SERVER
 
-fast block explorer, transaction lookup, and account profile tooling.
+open a transaction by its hash and see its receipts, execution logs,
+and gas usage directly in the browser.
 
--🌐 DOCS: https://docs.fastnear.com/
+- mainnet: https://tx.main.fastnear.com/
+- testnet: https://tx.test.fastnear.com/
 
-useful for looking up a transaction by hash, confirming a deployed
-contract id, and reading account state without writing a view call.
-
----
-
-#### INTEAR
-
-intear's tooling and reference material for near rpc and data.
-
--🌐 DOCS: https://docs.intear.tech/
+paste a transaction hash after the `/` and the page resolves it. this
+is the quickest way to check whether a call actually landed, and to
+read the outcome of one that failed on-chain.
 
 ---
 
