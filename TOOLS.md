@@ -60,15 +60,65 @@ staking pools and per-user lockups, substitute the concrete account id
 
 #### FASTNEAR TRANSACTIONS API SERVER
 
-open a transaction by its hash and see its receipts, execution logs,
-and gas usage directly in the browser.
+a **JSON API, not a web page** — there is nothing to paste a hash into.
+every endpoint is `POST`, takes a JSON body, and lives under `/v0`.
 
 - mainnet: https://tx.main.fastnear.com/
 - testnet: https://tx.test.fastnear.com/
 
-paste a transaction hash after the `/` and the page resolves it. this
-is the quickest way to check whether a call actually landed, and to
-read the outcome of one that failed on-chain.
+source: https://github.com/fastnear/explorer-api
+
+this is how an agent checks what actually happened on-chain instead of
+guessing. when a call returns a transaction hash, resolve it here to
+confirm the transaction completed, read its receipts and logs, and see
+whether it succeeded.
+
+> #### USAGE
+>
+> **check a transaction** — up to 20 hashes per request
+>
+> ```sh
+> curl -X POST https://tx.test.fastnear.com/v0/transactions \
+>  -H 'Content-Type: application/json' \
+>  -d '{
+>   "tx_hashes": [
+>    "HV42hanyDVK3MYoW8c17Ufxw83htNEQGk93bzyQRocvS",
+>    "D2pt9ceGUyiGdJeeZLDd3uBGHF11DmPe4aJFMaoWMmDd"
+>   ]
+> }'
+> ```
+>
+> returns `{ "transactions": [ /* raw tx data */ ] }` — check
+> `is_success` and read the logs.
+>
+> **find the transactions of an account** — this is the one to reach for
+> when you have an account id but no hash. it is cursor paginated, so
+> follow `resume_token` until it is absent.
+>
+> ```sh
+> curl -X POST https://tx.test.fastnear.com/v0/account \
+>  -H 'Content-Type: application/json' \
+>  -d '{ "account_id": "hello.sleet.testnet", "limit": 50 }'
+> ```
+>
+> filters worth knowing: `is_success`, `is_function_call`,
+> `is_event_log`, `is_real_signer`, `is_receiver`,
+> `from_tx_block_height` / `to_tx_block_height`, `desc`, `limit`
+> (max 200).
+>
+> **inspect a block** — by height or hash, optionally pulling its
+> transactions and receipts
+>
+> ```sh
+> curl -X POST https://tx.test.fastnear.com/v0/block \
+>  -H 'Content-Type: application/json' \
+>  -d '{ "block_id": 130000000, "with_transactions": true, "with_receipts": true }'
+> ```
+>
+> **other endpoints** — `POST /v0/blocks` for a range of blocks,
+> `POST /v0/receipt` to resolve a receipt id back to its transaction.
+>
+> swap `tx.test.fastnear.com` for `tx.main.fastnear.com` for mainnet.
 
 ---
 
