@@ -22,6 +22,17 @@ CONTRACT ID PER NETWORK
 > example account id or public key as though it were the user's intent.
 > A wrong public key here hands control of the new account to someone
 > else.
+>
+> #### SOURCING
+>
+> `create_account` is verified by a fun helper that builds and sends
+> this JSON. The arg shapes for `create_account_advanced`, `send`,
+> `get_key_balance`, and `get_key_information` come from the typed
+> contract `NEAR_TLD_CONTRACT_TRAIT` in the rust tool box, not from an
+> executed helper — check them against
+> `near contract inspect near network-config mainnet now` before
+> relying on them. That trait names the key field `key` on the two
+> views and `public_key` on `send`, which may not both be correct.
 
 ### get_key_balance - VIEW
 
@@ -60,13 +71,41 @@ CONTRACT ID PER NETWORK
 
 ### create_account_advanced - CALL
 
-- arg format not documented yet
+```json
+{
+  "new_account_id": "sleet.near",
+  "options": {
+    "full_access_keys": ["ed25519:..."],
+    "function_call_keys": [
+      {
+        "public_key": "ed25519:...",
+        "allowance": "250000000000000000000000",
+        "receiver_id": "sleet.near",
+        "method_names": "ping"
+      }
+    ],
+    "contract_bytes": null
+  }
+}
+```
+
+every field inside `options` is optional
+
 - gas: not documented yet
-- attached deposit: not documented yet
+- attached deposit: not documented yet — this method deposits the
+  attached funds onto the new account, so the deposit is the opening
+  balance
 
 ### send - CALL
 
-- arg format not documented yet
+```json
+{
+  "public_key": "ed25519:..."
+}
+```
+
+allows the given public key to claim the attached balance
+
 - gas: not documented yet
 - attached deposit: not documented yet — this method sends a
   linkdrop balance, so the deposit is the amount being sent
