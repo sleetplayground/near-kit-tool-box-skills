@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-ft
-description: Documents the NEP-141 / NEP-145 fungible token standard - the method names, call types (VIEW or CALL), and exact argument shapes shared by every FT contract (wNEAR, USDC, USDT, custom tokens). Use this skill whenever the user mentions an FT, fungible token, ft_transfer, ft_balance_of, ft_metadata, storage_deposit on a token contract, or asks what arguments a token transfer takes - including when they want to call or inspect a token contract and need the method list, argument names, or the standard NEP-141 shape. This is the standard itself, not one deployed contract, so there is no single contract id.
+description: Documents the NEP-141 / NEP-145 fungible token standard - the method names, call types (VIEW or CALL), exact argument shapes, and required gas and attached deposit shared by every FT contract (wNEAR, USDC, USDT, custom tokens). Use this skill whenever the user mentions an FT, fungible token, ft_transfer, ft_balance_of, ft_metadata, storage_deposit on a token contract, or asks what arguments a token transfer takes - including when they want to call or inspect a token contract and need the method list, argument names, or the standard NEP-141 shape. This is the standard itself, not one deployed contract, so there is no single contract id.
 ---
 
 # NEP-141 / NEP-145 Fungible Token (FT)
@@ -17,9 +17,20 @@ CONTRACT ID PER NETWORK
 - depends on the token — pass the token's own account id
   (e.g. wrap.near, usdt.tether-token.near)
 
+> #### ARG EXAMPLES
+>
+> The JSON blocks below are **worked examples**, not values to copy
+> verbatim. Treat them as a template for argument *shape* only, and
+> substitute the caller's own values — an agent must never reuse the
+> example account id or amount as though it were the user's intent.
+> Getting a receiver id or amount wrong here sends real tokens to the
+> wrong place.
+
 ### ft_metadata - VIEW
 
 - no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 returns `spec`, `name`, `symbol`, `icon?`, `reference?`,
 `reference_hash?`, `decimals`
@@ -27,6 +38,8 @@ returns `spec`, `name`, `symbol`, `icon?`, `reference?`,
 ### ft_total_supply - VIEW
 
 - no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### ft_balance_of - VIEW
 
@@ -36,6 +49,9 @@ returns `spec`, `name`, `symbol`, `icon?`, `reference?`,
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 ### storage_balance_of - VIEW
 
 ```json
@@ -44,23 +60,36 @@ returns `spec`, `name`, `symbol`, `icon?`, `reference?`,
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 returns `{ total, available }` — both yoctoNEAR decimal strings
 
 ### storage_balance_bounds - VIEW
 
 - no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### storage_deposit - CALL
 
-- no args necessary — the standard storage deposit is 0.00125 NEAR
+- no args necessary
+- gas: not documented yet — use the default
+- attached deposit: 0.00125 NEAR — the standard NEP-145 storage
+  minimum, though some tokens require more; check
+  `storage_balance_bounds` when a deposit fails
 
 ### storage_withdraw - CALL
 
 - no args necessary
+- gas: not documented yet — use the default
+- attached deposit: 1 yoctoNEAR
 
 ### storage_unregister - CALL
 
 - no args necessary
+- gas: not documented yet — use the default
+- attached deposit: 1 yoctoNEAR
 
 ### ft_transfer - CALL
 
@@ -71,7 +100,8 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 }
 ```
 
-requires exactly 1 yoctoNEAR attached as deposit
+- gas: not documented yet — use the default
+- attached deposit: 1 yoctoNEAR — the contract requires exactly this
 
 ### ft_transfer_call - CALL
 
@@ -83,15 +113,20 @@ requires exactly 1 yoctoNEAR attached as deposit
 }
 ```
 
-requires exactly 1 yoctoNEAR attached as deposit
+- gas: 50 Tgas
+- attached deposit: 1 yoctoNEAR
 
 ### ft_resolve_transfer - CALL
 
 - private / callback method — not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
 ### new - CALL
 
 - private initializer — not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
 ==========================
 <br/>

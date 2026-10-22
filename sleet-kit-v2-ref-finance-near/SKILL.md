@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-v2-ref-finance-near
-description: Documents the v2.ref-finance.near AMM DEX contract - the deployed contract id on mainnet and testnet, the core methods you will actually call (swap, add_liquidity, remove_liquidity, get_pool, get_pools, get_return, withdraw, storage_deposit) with their exact argument shapes, and a pointer to the full 162-method surface for everything else. Use this skill whenever the user mentions ref-finance, rhea, the AMM or DEX, a swap, adding or removing liquidity, get_pool, get_return, or v2.ref-finance.near - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
+description: Documents the v2.ref-finance.near AMM DEX contract - the deployed contract id on mainnet and testnet, the core methods you will actually call (swap, add_liquidity, remove_liquidity, get_pool, get_pools, get_return, withdraw, storage_deposit) with their exact argument shapes and required gas and attached deposit, and a pointer to the full 162-method surface for everything else. Use this skill whenever the user mentions ref-finance, rhea, the AMM or DEX, a swap, adding or removing liquidity, get_pool, get_return, or v2.ref-finance.near - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
 ---
 
 # v2.ref-finance.near
@@ -13,6 +13,15 @@ CONTRACT ID PER NETWORK
 
 - MAINNET: v2.ref-finance.near
 - TESTNET: ref-finance-101.testnet
+
+> #### ARG EXAMPLES
+>
+> The JSON blocks below are **worked examples**, not values to copy
+> verbatim. Treat them as a template for argument *shape* only, and
+> substitute the caller's own values — an agent must never reuse the
+> example token id, pool id, or amount as though it were the user's
+> intent. A swap built from these numbers verbatim would trade someone
+> else's chosen amounts on someone else's pool.
 
 ### swap - CALL
 
@@ -35,9 +44,18 @@ acceptable output.
 }
 ```
 
+- gas: not documented yet — use the default
+- attached deposit: 0
+
+> `min_amount_out` of `"0"` in the example is a placeholder that
+> accepts any output price. Always set it to a real slippage bound
+> before using this for value.
+
 ### add_liquidity - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
 ### add_simple_pool - CALL
 
@@ -48,9 +66,14 @@ acceptable output.
 }
 ```
 
+- gas: not documented yet — use the default
+- attached deposit: 0
+
 ### remove_liquidity - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: 1 yoctoNEAR
 
 ### withdraw - CALL
 
@@ -63,6 +86,9 @@ acceptable output.
 }
 ```
 
+- gas: not documented yet — use the default
+- attached deposit: 0
+
 ### get_pool - VIEW
 
 ```json
@@ -70,6 +96,9 @@ acceptable output.
   "pool_id": 1
 }
 ```
+
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 `shares_total_supply`, `amp`
@@ -83,9 +112,14 @@ returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 ### get_number_of_pools - VIEW
 
 - no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### get_return - VIEW
 
@@ -98,7 +132,14 @@ returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 ### get_deposits - VIEW
+
+- this reads the **internal token balances the contract holds for an
+  account** — it is not that account's LP position, staked balance, or
+  share count. To read LP positions use the deposit and pool views.
 
 ```json
 {
@@ -106,11 +147,18 @@ returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 returns a `{ token_id: amount }` map
 
 ### storage_deposit - CALL
 
-- no args necessary — the standard storage deposit is 0.00125 NEAR
+- no args necessary
+- gas: not documented yet — use the default
+- attached deposit: 0.00125 NEAR — the standard NEP-145 storage
+  minimum, though some pools require more; check
+  `storage_balance_bounds` when a deposit fails
 
 ### storage_balance_of - VIEW
 
@@ -120,22 +168,38 @@ returns a `{ token_id: amount }` map
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
 ### predict_swap_actions - VIEW
 
 - arg format not documented yet
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### batch_views - VIEW
 
 - arg format not documented yet
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### execute_actions - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-### EXECUTE / SWAP-BY-OUTPUT VARIANTS
+### swap_by_output - CALL
 
-- swap_by_output - arg format not documented yet
-- execute_actions_in_va - arg format not documented yet
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: 0
+
+### execute_actions_in_va - CALL
+
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
 ---
 
@@ -152,6 +216,10 @@ yet**. To get the authoritative list and signatures for your network:
 near contract inspect v2.ref-finance.near network-config mainnet now
 near contract inspect ref-finance-101.testnet network-config testnet now
 ```
+
+Every method in the surface below is a view unless listed as a call
+elsewhere in this document; unlisted methods default to the client's
+gas and a 0 deposit unless the contract requires otherwise.
 
 The method surface groups into these areas, all present unless noted
 otherwise:
@@ -228,7 +296,7 @@ otherwise:
   `batch_update_degen_token_by_pyth_oracle_callback`,
   `update_degen_token_price_callback`
 - **misc reads** — `version`, `get_tokens_paged`, `list_rated_tokens`,
-  `get_deposits`, `batch_views`, `donation_share`
+  `batch_views`
 
 ==========================
 <br/>
