@@ -1,6 +1,6 @@
 # near-kit-tool-box-skills
 
-skills for interacting with near blockchain and smart contracts.
+personal skill library for interacting with near blockchain and smart contracts.
 
 ---
 
