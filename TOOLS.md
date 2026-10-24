@@ -20,7 +20,7 @@ name constants, `src/lib/const_id` the contract id constants, and
 
 **TS**
 
--🐱 GIT: https://github.com/sleet-js/near-kit-tool-box
+-🐱 GIT: https://github.com/sleet-js/near-kit-tool-box-ts
 
 `packages/fun` holds the reusable functions, with the method
 constants, contract id constants, and shared types alongside them.

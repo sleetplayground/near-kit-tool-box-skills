@@ -16,7 +16,7 @@ personal skill library for interacting with near blockchain and smart contracts.
 <br/>
 tool box for near kit with custom web client and reusable functions
 <br/>
-🐱 TS: https://github.com/sleet-js/near-kit-tool-box
+🐱 TS: https://github.com/sleet-js/near-kit-tool-box-ts
 <br/>
 🐱 RUST: https://github.com/sleet-rs/near-kit-tool-box-rs
 
