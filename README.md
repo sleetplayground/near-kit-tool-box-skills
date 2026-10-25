@@ -56,6 +56,12 @@ these skills are sourced from.
 - [sleet-kit-meta-pool-near/SKILL.md](./sleet-kit-meta-pool-near/SKILL.md)
 - [sleet-kit-meme-cooking-near/SKILL.md](./sleet-kit-meme-cooking-near/SKILL.md)
 - [sleet-kit-app-chess-game-near/SKILL.md](./sleet-kit-app-chess-game-near/SKILL.md)
+- [sleet-kit-intear-dex/SKILL.md](./sleet-kit-intear-dex/SKILL.md)
+  - [engine.md](./sleet-kit-intear-dex/engine.md)
+  - [xyk.md](./sleet-kit-intear-dex/xyk.md)
+  - [otc.md](./sleet-kit-intear-dex/otc.md)
+  - [simple-amm.md](./sleet-kit-intear-dex/simple-amm.md)
+  - [minimal.md](./sleet-kit-intear-dex/minimal.md)
 
 > `pool.near` is split into two skills — `pool-near-factory` is the
 > factory that deploys validator pools, `pool-near-staking` is the
@@ -64,6 +70,14 @@ these skills are sourced from.
 > The house-of-stake set follows the same shape — `hos-venear-dao`
 > deploys each user's `hos-lockup` sub-account, and `hos-vote-dao` is
 > its own contract.
+>
+> The INTEAR DEX is one skill with a file per component —
+> `intear-dex/engine.md` is the host contract `dex.intear.near`, and
+> each sub-dex that runs inside it gets its own file:
+> `intear-dex/xyk.md` (the deployed AMM), `intear-dex/otc.md`,
+> `intear-dex/simple-amm.md` and `intear-dex/minimal.md`.
+> Only the xyk sub-dex is deployed on mainnet, under the dex id
+> `slimedragon.near/xyk`.
 >
 > Skills marked with an **ARG AND GAS** note have no verified fun
 > helper yet, so they list methods by name and call type only.

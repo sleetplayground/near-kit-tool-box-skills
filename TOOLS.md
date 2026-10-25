@@ -36,6 +36,34 @@ constants, contract id constants, and shared types alongside them.
 
 ---
 
+#### INTEAR DEX SOURCE
+
+the INTEAR DEX skill is sourced from the contract's own source
+repository, because the sub-dexes have no account of their own to
+inspect — they run as wasm inside the engine.
+
+-🐱 GIT: https://github.com/INTEARnear/dex
+
+`src/lib.rs` is the engine, `dexes/xyk`, `dexes/otc`,
+`dexes/simple-amm` and `dexes/minimal` are the sub-dexes, and
+`intear-dex-types` holds the shared `AssetId`, `DexId` and
+`AccountOrDexId` types.
+
+> #### BORSH
+>
+> the engine's own views are JSON. a **sub-dex** view is reached
+> through the engine's `dex_view`, which takes the sub-dex's
+> **borsh**-encoded arguments as base64 and answers with a base64
+> blob of borsh-encoded bytes. the `dex_view` envelope is
+> `{ "dex_id": "<deployer>/<id>", "method": "<name>", "args": "<base64>" }`.
+>
+> the deployed mainnet wasm was built from commit
+> `fd30f501ec27dbc3239e1529b4ce1d8cf5b5ecff`. check the engine's
+> `contract_source_metadata` view for the commit the current
+> deployment was built from.
+
+---
+
 #### NEAR CLI
 
 inspect a live contract for its authoritative method list and
