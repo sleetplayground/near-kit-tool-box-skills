@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-sputnik-dao
-description: Documents the Sputnik DAO contracts - the factory sputnik-dao.near that deploys the daos, and a dao itself at <name>.sputnik-dao.near - the contract ids, the difference between the two, the JSON argument shapes, and each method's call type (VIEW or CALL). Use this skill whenever the user mentions sputnik-dao, Sputnik DAO, a dao account like huggies.sputnik-dao.near, get_policy, get_proposals, add_proposal, get_dao_list, or a DAO treasury - including when they want to call or inspect these contracts and need the method list, the argument names, or which account is the factory and which is a dao.
+description: Documents the Sputnik DAO contracts - the factory sputnik-dao.near that deploys the daos, and a dao itself at <name>.sputnik-dao.near - the contract ids, the difference between the two, and each method's call type (VIEW or CALL) and argument shape. Use this skill whenever the user mentions sputnik-dao, Sputnik DAO, a dao account like huggies.sputnik-dao.near, get_policy, get_proposals, add_proposal, get_dao_list, or a DAO treasury - including when they want to call or inspect these contracts and need the method list, the argument names, or which account is the factory and which is a dao.
 ---
 
 # Sputnik DAO
@@ -19,8 +19,8 @@ a **dao** is `<name>.sputnik-dao.near` — `huggies.sputnik-dao.near`,
 
 this skill covers both. each has its own file:
 
-| component | file                       | mainnet deployed       |
-| --------- | -------------------------- | ---------------------- |
+| component | file                       | mainnet deployed         |
+| --------- | -------------------------- | ------------------------ |
 | factory   | [factory.md](./factory.md) | yes — `sputnik-dao.near` |
 | dao       | [dao.md](./dao.md)         | yes — `<name>.sputnik-dao.near` |
 
@@ -31,9 +31,9 @@ CONTRACT ID PER NETWORK
 - MAINNET: sputnik-dao.near (factory), `<name>.sputnik-dao.near` (a dao)
 - TESTNET: (none — mainnet only)
 
-> #### THE TRAP
+> #### THE FACTORY IS NOT A DAO
 >
-> calling the factory as if it were a dao fails with a misleading
+> calling the factory `sputnik-dao.near` as if it were a dao fails with
 > `MethodResolveError(MethodNotFound)` for **every** method, because
 > none of the dao methods exist there. the error says "method not
 > found", not "wrong contract".
@@ -44,80 +44,59 @@ CONTRACT ID PER NETWORK
 > pinned to an older one. read a dao's own `version` to know which
 > build it runs.
 
----
-
-#### THE ARGS ARE JSON
-
-the dao contract is `#[near(serializers=[borsh, json])]` and
-near-sdk's json mode is what a view call uses, so the args are **JSON**
-and the numbers are **JSON numbers**.
-
+> #### THE ARGS ARE JSON
+>
+> the dao contract is `#[near(serializers=[borsh, json])]` and
+> near-sdk's json mode is what a view call uses, so the args are **JSON**
+> and the numbers are **JSON numbers**.
+>
 > sending the numbers as borsh strings panics with
 > `Failed to deserialize input from JSON`. the factory's `get_daos`
 > panics with `invalid type: string "0", expected u64` for the same
 > reason.
 
+> #### ARG EXAMPLES
+>
+> The JSON blocks below are **worked examples**, not values to copy
+> verbatim. Treat them as a template for argument *shape* only, and
+> substitute the caller's own values — an agent must never reuse the
+> example account id as though it were the user's intent. A `Transfer`
+> proposal moves real funds.
+
+> #### SOURCE
+>
+> the dao contract is `sputnikdao2`, from `near-daos/sputnik-dao-contract`.
+> the factory's `contract_source_metadata` reports version `0.2.1`,
+> built from commit `2b0f34a3860460f285307ec2ccf36345acbe05a2`.
+>
+> ```sh
+> near contract inspect sputnik-dao.near network-config mainnet now
+> near contract inspect huggies.sputnik-dao.near network-config mainnet now
+> ```
+
 ---
 
-#### THE SHAPES
+#### THE MEMBERS
 
-**`get_config`**
+there is **no** method that lists every member of a dao. the policy
+only holds role -> member lists, and the roles that are open to
+everyone name no accounts at all.
 
-```json
-{ "name": "HUGGIES", "purpose": "managing digital assets", "metadata": "<base64 json>" }
-```
+so the member list is the union of the roles' member lists, and an
+account in three roles is **one** member, not three. summing the
+roles' member counts reads 6 for a dao with 2 people.
 
-the metadata decodes to fields like `{ primaryColor, flagLogo }` — the
-dao's own site branding.
+---
 
-**`get_policy`**
+#### TYPES
 
-```json
-{
-  "roles": [
-    {
-      "name": "Requestor",
-      "kind": { "Group": ["sleet.near", "huggies.near"] },
-      "permissions": ["call:VoteRemove", "transfer:VoteRemove", "call:AddProposal"],
-      "vote_policy": { "transfer": { "weight_kind": "RoleWeight", "quorum": "0", "threshold": "1" } }
-    }
-  ]
-}
-```
-
-`kind` is an enum with two shapes:
+a role's `kind` is an enum with two shapes:
 
 - `{ "Group": ["a.near", "b.near"] }` — the accounts in the role
 - `"Everyone"` — a bare string, meaning any account may act in the
   role. it names no accounts, so it has no member list.
 
-> #### THE MEMBERS
->
-> there is **no** method that lists every member of a dao. the policy
-> only holds role -> member lists, and the roles that are open to
-> everyone name no accounts at all.
->
-> so the member list is the union of the roles' member lists, and an
-> account in three roles is **one** member, not three. summing the
-> roles' member counts reads 6 for a dao with 2 people.
-
-**`get_proposals`**
-
-```json
-{
-  "id": 0,
-  "proposer": "greenghost.near",
-  "description": "This project was created using ...",
-  "kind": { "FunctionCall": { "receiver_id": "social.near", "actions": [{ "method_name": "...", "args": "...", "deposit": "0", "gas": "300000000000000" }] } },
-  "status": "Approved",
-  "vote_counts": { "council": ["1", "0", "0"] },
-  "votes": { "greenghost.near": "Approve" },
-  "submission_time": "1727213574427476731",
-  "last_actions_log": [{ "block_height": "220003978" }]
-}
-```
-
-`kind` is an enum, one of:
+a proposal's `kind` is an enum, one of:
 
 `ChangeConfig` `ChangePolicy` `AddMemberToRole` `RemoveMemberFromRole`
 `FunctionCall` `UpgradeSelf` `UpgradeRemote` `Transfer`
@@ -126,73 +105,15 @@ dao's own site branding.
 `ChangePolicyRemoveRole` `ChangePolicyUpdateDefaultVotePolicy`
 `ChangePolicyUpdateParameters`
 
-`status` is one of:
+a proposal's `status` is one of:
 
 `InProgress` `Approved` `Rejected` `Removed` `Expired` `Moved` `Failed`
 
-`vote_counts` maps a role name to `[yes, no, spam]`, as strings.
-
-`votes` maps an account id to `Approve`, `Reject`, `Remove` or
+a proposal's `vote_counts` maps a role name to `[yes, no, spam]`, as
+strings. `votes` maps an account id to `Approve`, `Reject`, `Remove` or
 `Unknown`.
 
----
-
-#### THE GOTCHAS
-
-1. **the account must be a real dao.** the factory answers none of
-   the dao methods, and the error is a misleading `MethodNotFound`.
-
-2. **a dao with no proposals answers with an empty list.** on some rpc
-   endpoints it answers with a wasm failure that carries no result
-   field instead — so a caller must read "no result" as "no
-   proposals", not as a failure.
-
-3. **`last_proposal_id` is the next id, not a count.** the contract
-   starts it at 0 and bumps it on every add. a dao whose proposals
-   were all removed still reports a non-zero id.
-
-4. **`get_proposal` and `get_bounty` take `id`.** calling them with
-   `proposal_id` or `bounty_id` panics with `missing field 'id'`.
-
-5. **a missing proposal or bounty is a normal answer.** the contract
-   panics with `ERR_NO_PROPOSAL` / `ERR_NO_BOUNTY`, so read those as
-   "no such proposal" and not as a broken contract.
-
-6. **`get_bounty_claims` takes only `account_id`.** it ignores any
-   other field.
-
-7. **`has_blob` takes a base58 hash.** a base64 hash panics with
-   `base58 decoding error`, and the wrong number of bytes panics with
-   `invalid length of the crypto hash`.
-
-8. **a proposal is not a transaction.** it is a record in the
-   contract's storage. `get_actions_log` gives the trail of
-   `AddProposal` / `VoteApprove` actions with their block heights, but
-   the contract does not store the transaction hashes.
-
-9. **the amount in a Transfer is in the token's own smallest unit, and
-   the contract does not say how many decimals that is.** NEAR is 24
-   decimals and most other tokens are 18, so the decimals come from
-   the token registry — never from a guess. an empty `token_id` means
-   NEAR.
-
----
-
-#### THE ARCHIVE RPC
-
-the archival rpc returns the result as a **byte array**, not base64:
-
-```js
-const raw = response.result.result;
-const text = Array.isArray(raw)
-  ? new TextDecoder().decode(new Uint8Array(raw))
-  : new TextDecoder().decode(
-      Uint8Array.from(atob(raw), (c) => c.charCodeAt(0)),
-    );
-```
-
-the standard `rpc.mainnet.near.org` returns base64. both are handled
-by near-kit.
+all 128-bit amounts are decimal strings in yocto units.
 
 ==========================
 <br/>

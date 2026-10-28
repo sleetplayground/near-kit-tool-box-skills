@@ -7,15 +7,7 @@ a dao's account id is `<name>.sputnik-dao.near`, e.g.
 `huggies.sputnik-dao.near`, `onsocial.sputnik-dao.near`,
 `sleet.sputnik-dao.near`.
 
-> #### THE TRAP
->
-> the factory `sputnik-dao.near` is **not** a dao. calling it as if it
-> were one fails with a misleading `MethodResolveError(MethodNotFound)`
-> for every method, because none of these methods exist there.
->
-> see [SKILL.md](./SKILL.md) for the overview and the factory.
-
-see [SKILL.md](./SKILL.md) for the shared shapes and gotchas.
+see [SKILL.md](./SKILL.md) for the shared types and the factory.
 
 ---
 
@@ -34,59 +26,48 @@ CONTRACT ID PER NETWORK
 >
 > #### SOURCE
 >
-> the dao contract is `sputnikdao2`. its source is
-> `near-daos/sputnik-dao-contract`. a dao answers `version` with the
-> build it runs — `2.3.1` for the current one — and the factory
-> publishes five builds: `[2,0]`, `[2,1]`, `[3,0]`, `[3,1]` and
-> `[3,2]`.
+> the dao contract is `sputnikdao2`, from `near-daos/sputnik-dao-contract`.
+> a dao answers `version` with the build it runs — `2.3.1` for the
+> current one.
 >
 > ```sh
 > near contract inspect huggies.sputnik-dao.near network-config mainnet now
 > ```
 
-### CONFIG AND POLICY
-
-#### get_config - VIEW
+### get_config - VIEW
 
 - no args necessary
-- answers the dao's name, purpose and metadata
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-{ "name": "HUGGIES", "purpose": "managing digital assets", "metadata": "<base64 json>" }
-```
+returns the dao's `name`, `purpose` and `metadata`. the metadata is
+base64-encoded JSON — it decodes to fields like `{ primaryColor,
+flagLogo }`, the dao's own site branding.
 
-#### get_policy - VIEW
-
-- no args necessary
-- answers the dao's roles, who is in them, and what they may do
-
-```json
-{
-  "roles": [
-    {
-      "name": "Requestor",
-      "kind": { "Group": ["sleet.near", "huggies.near"] },
-      "permissions": ["call:VoteRemove", "transfer:VoteRemove", "call:AddProposal"]
-    }
-  ]
-}
-```
-
-#### version - VIEW
+### get_policy - VIEW
 
 - no args necessary
-- answers the dao contract's version, e.g. `2.3.1`
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-#### contract_source_metadata - VIEW
+returns the dao's `roles`, each with a `name`, a `kind`, the
+`permissions` the role grants and its `vote_policy`.
+
+### version - VIEW
 
 - no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-### PROPOSALS
+returns the dao contract's version, e.g. `2.3.1`
 
-#### get_proposals - VIEW
+### contract_source_metadata - VIEW
 
-- `from_index` — the proposal to start at, a JSON number
-- `limit` — how many proposals to return, a JSON number
+- no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+### get_proposals - VIEW
 
 ```json
 {
@@ -95,20 +76,27 @@ CONTRACT ID PER NETWORK
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns a page of proposals
+
 > a dao with no proposals answers with an empty list. on some rpc
-> endpoints it answers with a wasm failure that carries no result
-> field instead — read "no result" as "no proposals", not as a
-> failure.
+> endpoints it answers with a wasm failure that carries no result field
+> instead — read "no result" as "no proposals", not as a failure.
 
-#### get_proposal - VIEW
-
-- `id` — the proposal's id, a JSON number
+### get_proposal - VIEW
 
 ```json
 {
   "id": 0
 }
 ```
+
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns one proposal
 
 > the arg is `id`. calling it with `proposal_id` panics with
 > `missing field 'id'`.
@@ -118,37 +106,32 @@ CONTRACT ID PER NETWORK
 > its counter and the record in the actions log but drops the proposal
 > itself.
 
-#### get_last_proposal_id - VIEW
+### get_last_proposal_id - VIEW
 
 - no args necessary
-- answers the id the dao's **next** proposal will carry
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns the id the dao's **next** proposal will carry
 
 > this is the next id, not the count of the proposals. the contract
 > starts it at 0 and bumps it on every add, so a dao whose proposals
 > were all removed still reports a non-zero id.
 
-#### get_actions_log - VIEW
+### get_actions_log - VIEW
 
 - no args necessary
-- answers every action the dao has recorded — who did what, to which
-  proposal, and in which block
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-[
-  { "account_id": "sleet.near", "proposal_id": "0", "action": "AddProposal", "block_height": "189585245" }
-]
-```
+returns every action the dao has recorded — `account_id`,
+`proposal_id`, `action` and `block_height`
 
 > a proposal is not a transaction. the contract stores the proposal's
 > record and this trail of actions, but it does not store the
 > transaction hashes.
 
-### BOUNTIES
-
-#### get_bounties - VIEW
-
-- `from_index` — the bounty to start at, a JSON number
-- `limit` — how many bounties to return, a JSON number
+### get_bounties - VIEW
 
 ```json
 {
@@ -157,29 +140,35 @@ CONTRACT ID PER NETWORK
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns a page of bounties
+
 > the amount is in the token's own smallest unit and the contract does
 > not say how many decimals that is. NEAR is 24 decimals and most
 > other tokens are 18, so read the decimals from the token registry —
 > never from a guess. an empty `token_id` means NEAR.
 
-#### get_bounty - VIEW
-
-- `id` — the bounty's id, a JSON number
+### get_bounty - VIEW
 
 ```json
 {
   "id": 0
 }
 ```
+
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns one bounty
 
 > the arg is `id`. calling it with `bounty_id` panics with
 > `missing field 'id'`.
 >
 > a bounty that is not there panics with `ERR_NO_BOUNTY`.
 
-#### get_bounty_claims - VIEW
-
-- `account_id` — the account whose claims to read
+### get_bounty_claims - VIEW
 
 ```json
 {
@@ -187,11 +176,14 @@ CONTRACT ID PER NETWORK
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns the claims on the dao's bounties
+
 > this is the **only** arg. the contract ignores any other field.
 
-#### get_bounty_number_of_claims - VIEW
-
-- `id` — the bounty's id, a JSON number
+### get_bounty_number_of_claims - VIEW
 
 ```json
 {
@@ -199,57 +191,55 @@ CONTRACT ID PER NETWORK
 }
 ```
 
-#### get_last_bounty_id - VIEW
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns how many times a bounty has been claimed
+
+### get_last_bounty_id - VIEW
 
 - no args necessary
-- answers the id the dao's **next** bounty will carry
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-### BALANCES AND STAKING
+returns the id the dao's **next** bounty will carry
 
-#### get_available_amount - VIEW
-
-- no args necessary
-- answers the NEAR the dao can spend, in yoctoNEAR, as a string
-
-```json
-"68302660735259599999998"
-```
-
-#### get_locked_storage_amount - VIEW
+### get_available_amount - VIEW
 
 - no args necessary
-- answers the NEAR the dao holds for storage, in yoctoNEAR, as a
-  string — the money it cannot spend
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-"34700000000000000000000"
-```
+returns the NEAR the dao can spend, in yoctoNEAR
 
-#### get_staking_contract - VIEW
+### get_locked_storage_amount - VIEW
 
 - no args necessary
-- answers the staking contract the dao uses, or an empty string when
-  it has none
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-""
-```
+returns the NEAR the dao holds for storage, in yoctoNEAR — the money
+it cannot spend
 
-#### get_factory_info - VIEW
+### get_staking_contract - VIEW
 
 - no args necessary
-- answers the factory that deployed the dao and whether it follows the
-  factory's default code
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-{ "factory_id": "sputnik-dao.near", "auto_update": true }
-```
+returns the staking contract the dao uses, or an empty string when it
+has none
 
-### DELEGATION
+### get_factory_info - VIEW
 
-#### delegation_balance_of - VIEW
+- no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-- `account_id` — the account whose delegated voting power to read
+returns the `factory_id` that deployed the dao and whether it follows
+the factory's default code
+
+### delegation_balance_of - VIEW
 
 ```json
 {
@@ -257,11 +247,12 @@ CONTRACT ID PER NETWORK
 }
 ```
 
-- answers the delegated voting power, as a string
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-#### delegation_balance_ratio - VIEW
+returns the account's delegated voting power
 
-- `account_id` — the account whose ratio to read
+### delegation_balance_ratio - VIEW
 
 ```json
 {
@@ -269,22 +260,21 @@ CONTRACT ID PER NETWORK
 }
 ```
 
-- answers `[balance, ratio]`, both as strings
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-```json
-["0", "0"]
-```
+returns `[balance, ratio]`, the account's delegated voting power and
+its share of the dao's total
 
-#### delegation_total_supply - VIEW
+### delegation_total_supply - VIEW
 
 - no args necessary
-- answers the total delegated voting power the dao has, as a string
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
-### BLOBS
+returns the total delegated voting power the dao has
 
-#### has_blob - VIEW
-
-- `hash` — the blob's 32-byte crypto hash, in **base58**
+### has_blob - VIEW
 
 ```json
 {
@@ -292,59 +282,74 @@ CONTRACT ID PER NETWORK
 }
 ```
 
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns whether the dao holds a blob with that hash
+
 > base58, not base64. a base64 hash panics with `base58 decoding
 > error`, and the wrong number of bytes panics with `invalid length of
 > the crypto hash`.
 
-### CALLS
-
-> the arg formats for the call methods are **not documented yet**.
-> treat them as a starting point, not a specification. get the
-> authoritative signatures before using any of them:
->
-> ```sh
-> near contract inspect huggies.sputnik-dao.near network-config mainnet now
-> ```
-
-#### add_proposal - CALL
+### add_proposal - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-#### act_proposal - CALL
-
-- arg format not documented yet
-
-#### on_proposal_callback - CALL
+### act_proposal - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-#### bounty_claim - CALL
-
-- arg format not documented yet
-
-#### bounty_done - CALL
+### on_proposal_callback - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-#### bounty_giveup - CALL
-
-- arg format not documented yet
-
-#### store_blob - CALL
+### bounty_claim - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-#### remove_blob - CALL
-
-- arg format not documented yet
-
-#### register_delegation - CALL
+### bounty_done - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
-#### migrate - CALL
+### bounty_giveup - CALL
 
 - arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### store_blob - CALL
+
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### remove_blob - CALL
+
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### register_delegation - CALL
+
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### migrate - CALL
+
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
 
 ==========================
 <br/>
