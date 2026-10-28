@@ -20,14 +20,8 @@ tool box for near kit with custom web client and reusable functions
 <br/>
 🐱 RUST: https://github.com/sleet-rs/near-kit-tool-box-rs
 
+see more at https://github.com/near-kit
 
-**never-gonna-give-you-up**
-<br/>
-🐱 GIT:
-
-**never-gonna-give-you-up**
-<br/>
-🐱 GIT:
 
 ---
 
