@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-rhea-dclv2-ref-labs-near
-description: Documents the dclv2.ref-labs.near concentrated-liquidity DEX contract - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions dclv2, ref-labs, the concentrated liquidity DEX, a DCL quote, add_liquidity or remove_liquidity by position, mint_v_liquidity, or burn_v_liquidity - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
+description: Documents the dclv2.ref-labs.near concentrated-liquidity DEX contract - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), arguments, and required gas and attached deposit. Use this skill whenever the user mentions dclv2, ref-labs, the concentrated liquidity DEX, a DCL quote, add_liquidity or remove_liquidity by position, mint_v_liquidity, or burn_v_liquidity - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
 ---
 
 # dclv2.ref-labs.near
@@ -17,11 +17,10 @@ CONTRACT ID PER NETWORK
 > #### ARG EXAMPLES
 >
 > The JSON blocks below are **worked examples**, not values to copy
-> verbatim. Treat them as a template for argument *shape* only, and
-> substitute the caller's own values — an agent must never reuse the
-> example token id, pool id, or amount as though it were the user's
-> intent. Amounts here are yocto units, and copying one verbatim moves
-> a real balance.
+> verbatim. Substitute the caller's own values — an agent must never
+> reuse the example token id, pool id, or amount as though it were the
+> user's intent. Amounts here are yocto units, and copying one verbatim
+> moves a real balance.
 
 ### quote - VIEW
 
