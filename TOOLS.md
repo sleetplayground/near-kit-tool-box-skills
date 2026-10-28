@@ -100,6 +100,14 @@ request bodies and response shapes — read that rather than guessing.
 
 source: https://github.com/fastnear/explorer-api
 
+
+#### INTEAR API
+
+the base url is `https://api.intea.rs`, no api key. every page of the
+docs is also markdown, at its url with `.md` in place of the trailing
+slash — <https://docs.intear.tech/api/llms-full.txt> has all of them in
+one file.
+
 ---
 
 #### DOCS
