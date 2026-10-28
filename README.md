@@ -56,6 +56,9 @@ these skills are sourced from.
   - [otc.md](./sleet-kit-intear-dex/otc.md)
   - [simple-amm.md](./sleet-kit-intear-dex/simple-amm.md)
   - [minimal.md](./sleet-kit-intear-dex/minimal.md)
+- [sleet-kit-sputnik-dao/SKILL.md](./sleet-kit-sputnik-dao/SKILL.md)
+  - [factory.md](./sleet-kit-sputnik-dao/factory.md)
+  - [dao.md](./sleet-kit-sputnik-dao/dao.md)
 
 > `pool.near` is split into two skills — `pool-near-factory` is the
 > factory that deploys validator pools, `pool-near-staking` is the
@@ -72,6 +75,12 @@ these skills are sourced from.
 > `intear-dex/simple-amm.md` and `intear-dex/minimal.md`.
 > Only the xyk sub-dex is deployed on mainnet, under the dex id
 > `slimedragon.near/xyk`.
+>
+> The Sputnik DAO set follows the same shape — `sputnik-dao/factory.md`
+> is the factory `sputnik-dao.near` that deploys the daos, and
+> `sputnik-dao/dao.md` is a dao itself at `<name>.sputnik-dao.near`.
+> The two are not interchangeable: calling the factory as if it were a
+> dao fails with a misleading `MethodNotFound` for every method.
 >
 > Skills marked with an **ARG AND GAS** note have no verified fun
 > helper yet, so they list methods by name and call type only.

@@ -121,6 +121,26 @@ returns `pool_kind`, `token_account_ids`, `amounts`, `total_fee`,
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
+### get_pool_shares_batch - VIEW
+
+```json
+{
+  "pool_ids": [0, 1, 2],
+  "account_id": "sleet.near"
+}
+```
+
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns an array of LP share strings, one per pool id, in the order
+the pools were asked for
+
+> the batch is bounded by the rpc's **view gas**, not by the contract.
+> the contract caps nothing — a batch of about 5000 pool ids answers
+> on mainnet today, and a larger one fails with a wasm
+> `GasLimitExceeded`. split a large list into batches.
+
 ### get_return - VIEW
 
 ```json
