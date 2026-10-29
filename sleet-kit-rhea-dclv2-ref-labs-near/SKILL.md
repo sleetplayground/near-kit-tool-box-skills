@@ -1,11 +1,16 @@
----
-name: sleet-kit-rhea-dclv2-ref-labs-near
-description: Documents the dclv2.ref-labs.near concentrated-liquidity DEX contract - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), arguments, and required gas and attached deposit. Use this skill whenever the user mentions dclv2, ref-labs, the concentrated liquidity DEX, a DCL quote, add_liquidity or remove_liquidity by position, mint_v_liquidity, or burn_v_liquidity - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
----
-
 # dclv2.ref-labs.near
 
 the ref-finance concentrated-liquidity dex v2 smart contract
+
+this skill is split into files. this page is the overview and the index.
+
+| file                                     | what it holds                                             |
+| ---------------------------------------- | --------------------------------------------------------- |
+| [views.md](./views.md)                   | the 40 read methods of the contract                        |
+| [calls.md](./calls.md)                   | the 45 state-changing methods of the contract              |
+| [ft_transfer_call.md](./ft_transfer_call.md) | the token inflows — swaps, deposits, limit orders       |
+| [multi.md](./multi.md)                   | the multi ft (`mft_*`) and nft (`nft_*`) interface         |
+| [recipes.md](./recipes.md)               | task shaped how-tos with the functions and bins to use     |
 
 ---
 
@@ -13,14 +18,6 @@ CONTRACT ID PER NETWORK
 
 - MAINNET: dclv2.ref-labs.near
 - TESTNET: dclv2.ref-dev.testnet
-
-> #### ARG EXAMPLES
->
-> The JSON blocks below are **worked examples**, not values to copy
-> verbatim. Substitute the caller's own values — an agent must never
-> reuse the example token id, pool id, or amount as though it were the
-> user's intent. Amounts here are yocto units, and copying one verbatim
-> moves a real balance.
 
 > #### ID FORMATS
 >
@@ -46,941 +43,131 @@ CONTRACT ID PER NETWORK
 > `list_pools` and `list_liquidities` are the views that expose real ids.
 > The website's own form (`token<>token@fee`) returns `null`.
 
-### quote - VIEW
-
-`pool_ids` is the ordered route through pools.
-
-```json
-{
-  "pool_ids": ["a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000"],
-  "input_token": "wrap.near",
-  "output_token": "usdc.tether-token.near",
-  "input_amount": "1000000000000000000000000",
-  "tag": "0"
-}
-```
-
-`tag` is an optional opaque label echoed back in the response
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### quote_by_output - VIEW
-
-```json
-{
-  "pool_ids": ["a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000"],
-  "input_token": "wrap.near",
-  "output_token": "usdc.tether-token.near",
-  "output_amount": "1000000"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_pool - VIEW
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000"
-}
-```
-
-answers with 23 fields: `pool_id`, `token_x`, `token_y`, `fee`,
-`point_delta`, `current_point`, `liquidity`, `liquidity_x`,
-`max_liquidity_per_point`, `total_x`, `total_y`, `total_liquidity`,
-`total_order_x`, `total_order_y`, `volume_x_in`, `volume_x_out`,
-`volume_y_in`, `volume_y_out`, `total_fee_x_charged`,
-`total_fee_y_charged`, `state`, `whitelist`, and `tax`
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_pools - VIEW
-
-```json
-{
-  "pool_ids": ["a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000"]
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_pools - VIEW
-
-```json
-{
-  "from_index": 0,
-  "limit": 100
-}
-```
-
-answers with an array of the same 23-field pool objects
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_liquidity - VIEW
-
-```json
-{
-  "lpt_id": "nearvember-337.meme-cooking.near|wrap.near|10000#17677"
-}
-```
-
-answers with 10 fields: `lpt_id`, `owner_id`, `pool_id`, `left_point`,
-`right_point`, `amount`, `mft_id`, `v_liquidity`, `unclaimed_fee_x`, and
-`unclaimed_fee_y`
-
-`left_point` and `right_point` are NEGATIVE for a position below the
-current point — the live answer for `sleet.near` is `-9400` and `-9200`
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_liquidity_view - VIEW
-
-```json
-{
-  "lpt_id": "nearvember-337.meme-cooking.near|wrap.near|10000#17677"
-}
-```
-
-answers with the same shape as `get_liquidity` but with `token_x`,
-`token_y`, `fee_x`, and `fee_y` in place of `unclaimed_fee_x` and
-`unclaimed_fee_y`
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_liquidity_range - VIEW
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "left_point": 0,
-  "right_point": 100
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_pointorder_range - VIEW
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "left_point": 0,
-  "right_point": 100
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_marketdepth - VIEW
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "depth": 10
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_market_depth_list - VIEW
-
-```json
-{
-  "pool_id_list": ["a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000"],
-  "depth": 10
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_order - VIEW
-
-```json
-{
-  "order_id": "1:0"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### find_order - VIEW
-
-```json
-{
-  "account_id": "sleet.near",
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "point": 0
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_active_orders - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_history_orders - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_liquidities - VIEW
-
-```json
-{
-  "account_id": "sleet.near",
-  "from_index": 0,
-  "limit": 100
-}
-```
-
-answers with an array of the same 10-field liquidity objects
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_liquidity_views - VIEW
-
-```json
-{
-  "account_id": "sleet.near",
-  "from_index": 0,
-  "limit": 100
-}
-```
-
-answers with an array of the liquidity-view objects — the `get_liquidity_view`
-shape
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_user_asset - VIEW
-
-```json
-{
-  "account_id": "sleet.near",
-  "token_id": "wrap.near"
-}
-```
-
-answers with a BARE decimal string — the live answer on
-`dclv2.ref-labs.near` is `"0"` — not an object. The account and token are
-both in the request, so the response repeats neither
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_user_assets - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-answers with a `{ token_id: balance }` map, the balances as decimal strings
-in each token's smallest unit
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_user_storage_detail - VIEW
-
-```json
-{
-  "user_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_metadata - VIEW
-
-- no args necessary
-- answers with 12 fields: `version`, `owner_id`, `farming_contract_id`,
-  `next_owner_id`, `next_owner_accept_deadline`, `wnear_id`, `state`,
-  `operators`, `protocol_fee_rate`, `pool_count`, and `user_count`.
-  `pool_count` and `user_count` are JSON strings; `protocol_fee_rate` is a
-  JSON number
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_mft_supply - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### predict_add_liquidity - VIEW
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "left_point": 0,
-  "right_point": 100,
-  "amount_x": "0",
-  "amount_y": "0"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### predict_remove_liquidity - VIEW
-
-```json
-{
-  "lpt_id": "nearvember-337.meme-cooking.near|wrap.near|10000#17677",
-  "liquidity": "1000"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### predict_hotzap - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_user_mft_asset - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_user_mft_assets - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_contract_storage_report - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_pool_whitelist - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### is_pool_account_allowed - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### is_valid_referral - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_frozenlist_tokens - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### list_vip_users - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_vip_user_discount - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_referral_whitelist - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_secure_sender_whitelist - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_client_echo_token_whitelist - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### get_client_echo_sender_whitelist - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### storage_balance_of - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### storage_balance_bounds - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### add_liquidity - CALL
-
-```json
-{
-  "pool_id": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000",
-  "left_point": 0,
-  "right_point": 100,
-  "amount_x": "0",
-  "amount_y": "0",
-  "min_amount_x": "0",
-  "min_amount_y": "0"
-}
-```
-
-`min_amount_x` and `min_amount_y` are the slippage bounds — set them
-above zero before using this with value
-
-- gas: 300 Tgas
-- attached deposit: 0
-
-### remove_liquidity - CALL
-
-```json
-{
-  "lpt_id": "nearvember-337.meme-cooking.near|wrap.near|10000#17677",
-  "amount": "1000",
-  "min_amount_x": "0",
-  "min_amount_y": "0"
-}
-```
-
-- gas: 300 Tgas
-- attached deposit: 0
-
-### mint_v_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### burn_v_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### append_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### merge_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### batch_add_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### batch_remove_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### batch_update_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### batch_mint_v_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### batch_burn_v_liquidity - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### withdraw_asset - CALL
-
-```json
-{
-  "token_id": "wrap.near",
-  "amount": "1000000000000000000000000"
-}
-```
-
-omit `amount` to withdraw the full balance of that token. Check
-`get_user_asset` or `list_user_assets` first.
-
-- gas: 300 Tgas
-- attached deposit: 0
-
-### cancel_order - CALL
-
-```json
-{
-  "order_id": "1:0",
-  "amount": "0"
-}
-```
-
-omit `amount` for a full cancel. Pass `"0"` to claim the filled
-(`unclaimed_amount`) without cancelling the remainder.
-
-- gas: 300 Tgas
-- attached deposit: 0
-
-### storage_deposit - CALL
-
-```json
-{
-  "registration_only": true
-}
-```
-
-the minimum from `storage_balance_bounds` is **not** enough in practice
-— 0.5 NEAR worked on `dclv2.ref-dev.testnet`
-
-- gas: not documented yet
-- attached deposit: 0.5 NEAR
-
-### storage_withdraw - CALL
-
-- no args necessary
-- gas: 300 Tgas
-- attached deposit: 1 yoctoNEAR
-
-### storage_unregister - CALL
-
-- no args necessary
-- gas: 300 Tgas
-- attached deposit: 1 yoctoNEAR
-
-### create_pool - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### clear_pool_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### claim_charged_fee - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### pause_contract - CALL
-
-- no args necessary
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### resume_contract - CALL
-
-- no args necessary
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### pause_pool - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### resume_pool - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### set_pool_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### extend_frozenlist_tokens - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_frozenlist_tokens - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### extend_operators - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_operators - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### modify_protocol_fee_rate - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### modify_storage_params - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### set_farming_contract_id - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### set_vip_user - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_vip_user - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### add_next_owner - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### grant_next_owner - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### confirm_next_owner - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### cancel_next_owner - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### upsert_referral_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_referral_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### upsert_secure_sender_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_secure_sender_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### upsert_client_echo_token_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_client_echo_token_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### upsert_client_echo_sender_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### remove_client_echo_sender_whitelist - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-
-### mft_transfer - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### mft_transfer_all_call - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### mft_balance_of - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### mft_total_supply - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### mft_metadata - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_transfer - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### nft_approve - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### nft_revoke - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### nft_revoke_all - CALL
-
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: 1 yoctoNEAR
-
-### nft_is_approved - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_token - VIEW
-
-```json
-{
-  "token_id": "1"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_tokens - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_tokens_for_owner - VIEW
-
-- arg format not documented yet
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_supply_for_owner - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_total_supply - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-### nft_metadata - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
+---
+
+#### THE THREE KINDS OF CALL
+
+the DEX is reached in three different ways, and mixing them up is the
+most common mistake:
+
+1. **a view** — a read, free, no signer needed. `quote`, `get_pool`,
+   `list_liquidities` and the rest live in [views.md](./views.md).
+2. **a contract method** — a call to a method *on the DEX*. `add_liquidity`,
+   `remove_liquidity`, `withdraw_asset`, `cancel_order`, `storage_deposit`
+   and the rest live in [calls.md](./calls.md).
+3. **an `ft_transfer_call` on the token** — a call on the **token contract**,
+   with the DEX as `receiver_id` and the DEX call carried inside `msg`.
+   swaps, internal-balance deposits and limit orders all work this way, and
+   they live in [ft_transfer_call.md](./ft_transfer_call.md).
+
+the DEX has **no `swap` method, no `deposit` method and no `place_order`
+method**. those three flows are all `ft_transfer_call` on the token.
 
 ---
 
-#### TOKEN TRANSFERS
+#### THE INTERNAL BALANCE
 
-These are **not methods on this contract**. They are the standard
-`ft_transfer` / `ft_transfer_call` calls made **on the token contract
-you want to move** — `wrap.near`, `usdc.tether-token.near`, or any
-other FT — with this DEX as the `receiver_id`.
+the DEX keeps a per-user **internal balance** of every token it has seen.
+`add_liquidity` pulls from it, and `withdraw_asset` pays out of it.
 
-##### ft_transfer_call on the input token - CALL
+so the LP flow is always three steps, never two:
 
-a swap does not call a `swap` method on this contract. It calls
-`ft_transfer_call` on the **input token**, which routes into this
-contract. `msg` carries the swap as a nested `Swap` object.
+1. `ft_transfer_call` on the token with `msg = "\"Deposit\""` — credit the
+   internal balance
+2. `add_liquidity` — a direct contract method, pulling from the internal
+   balance
+3. `withdraw_asset` — a direct contract method, paying out of it
 
-```json
-{
-  "receiver_id": "dclv2.ref-labs.near",
-  "amount": "1000000000000000000000000",
-  "msg": "{\"Swap\":{\"pool_ids\":[\"a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000\"],\"output_token\":\"usdc.tether-token.near\",\"min_output_amount\":\"0\"}}"
-}
-```
+a swap does **not** touch the internal balance. it goes straight in and
+straight out to the wallet.
 
-- `pool_ids` is the ordered route through pools
-- set `min_output_amount` from a `quote` view result with your
-  slippage applied — `"0"` accepts any output price
-- the output token must have storage registered for the signer or the
-  swap fails
-- gas: 180 Tgas
-- attached deposit: 1 yoctoNEAR
+---
 
-##### ft_transfer_call on the input token - CALL (deposit)
+#### GAS AND DEPOSITS
 
-depositing a token into the DEX uses the same call with a `Deposit` msg
+- every **view** is free and takes no deposit
+- a **contract method** takes no deposit, except the storage methods:
+  `storage_deposit` needs 0.5 NEAR, and `storage_withdraw` /
+  `storage_unregister` attach exactly 1 yoctoNEAR
+- an **`ft_transfer_call`** attaches exactly 1 yoctoNEAR
 
-```json
-{
-  "receiver_id": "dclv2.ref-labs.near",
-  "amount": "1000000000000000000000000",
-  "msg": "\"Deposit\""
-}
-```
+the `ft_transfer_call` gas is the one to watch:
 
-- `msg` is the JSON string `"Deposit"`, including its quotes
-- gas: 1000 Tgas
-- attached deposit: 1 yoctoNEAR
+| flow                     | gas    |
+| ------------------------ | ------ |
+| deposit                  | 1000   |
+| swap                     | 180    |
+| limit order with a swap  | 300    |
 
-##### ft_transfer_call on the sell token - CALL (limit order)
+a limit order that swaps first needs more than the gas of a plain swap —
+180 Tgas runs out of prepaid gas *after* the swap already succeeded, so
+the swap goes through and the order placement fails.
 
-placing a limit order uses the same call on the **sell** token with a
-`LimitOrder` msg. A limit order that also fills immediately is
-`LimitOrderWithSwap`.
+---
 
-```json
-{
-  "receiver_id": "dclv2.ref-labs.near",
-  "amount": "1000000000000000000000000",
-  "msg": "{\"LimitOrder\":{\"pool_id\":\"<token_x>|<token_y>|<fee>\",\"buy_token\":\"<token_bought>\",\"point\":286880,\"client_id\":\"\"}}"
-}
-```
+#### THE DEX MUST HOLD THE TOKEN
 
-- `buy_token` is the token being bought, the one you do **not** send
-- `point` is the limit price point; it must be a multiple of the
-  pool's `point_delta` (fee 100→1, 400→8, 2000→40, 10000→200) **and**
-  sit on the correct side of `current_point` for the token being sold,
-  else the call fails with `E202: illegal point`. Selling `token_y`
-  wants a point below `current_point`; selling `token_x` wants one
-  above. Read the live order points of a pool from `get_marketdepth`
-  (the `orders` key) and pick one that already exists there
-- `client_id` is required — pass `""`
-- do **not** pass `referral_id: ""`; the contract parses it as an
-  account id and an empty string fails with `E600: invalid msg:
-  Error("the account ID is invalid")`. Omit the field entirely
-- gas: 300 Tgas for `LimitOrderWithSwap` (it runs a real swap first,
-  and the 180 Tgas of a plain swap runs out of prepaid gas after the
-  swap already succeeded)
-- attached deposit: 1 yoctoNEAR
+every token inflow is an `ft_transfer_call` on the token into the DEX, and
+a token contract refuses to transfer to a receiver it does not know. if
+the DEX is not registered on that token the call panics with
+`The account <dcl_id> is not registered` and the tokens are refunded.
 
-**The DEX must be an FT holder of the token.** Every inflow is an
-`ft_transfer_call` on the token into this contract, and a token
-contract refuses to transfer to an unregistered receiver — the call
-panics with `The account <dcl_id> is not registered` and the tokens are
-refunded. Check with `ft_storage_balance_of(<token>, <dcl_id>)`: a
-`null` means "not registered".
+check first with the `ft_storage_balance_of` view on the token contract —
+`ft_storage_balance_of(<token>, <dcl_id>)` — a `null` means "not
+registered", and that token cannot be deposited, swapped or traded through
+the DEX.
+
+---
+
+#### POINTS
+
+a pool's `point_delta` comes from its fee: 100→1, 400→8, 2000→40,
+10000→200.
+
+- an **LP range** (`left_point`, `right_point`) must sit on multiples of
+  `point_delta`, else `E200: invalid endpoint`
+- a **limit order** `point` must also sit on the correct side of
+  `current_point` for the token being sold, else `E202: illegal point`.
+  selling `token_y` wants a point below `current_point`, selling `token_x`
+  wants one above
+
+`current_point` is generally not a multiple of `point_delta`, so round to
+it. read the live order points of a pool from `get_marketdepth` (the
+`orders` key) and pick one that already exists there.
+
+---
+
+#### WHERE THE FUNCTIONS AND BINS LIVE
+
+in the `near-kit-tool-box-rs` crate:
+
+| flow                | function                                                             | bin                                          |
+| ------------------- | -------------------------------------------------------------------- | -------------------------------------------- |
+| quote               | `fun::rhea_dclv2::dclv2_quote_fun_json::quote`                        | `rhea_dclv2_quote_bin_json`                    |
+| quote by output     | `fun::rhea_dclv2::dclv2_quote_by_output_fun_json::quote_by_output`    | `rhea_dclv2_quote_by_output_bin_json`          |
+| get pool            | `fun::rhea_dclv2::dclv2_get_pool_fun_json::get_pool`                  | `rhea_dclv2_get_pool_bin_json`                 |
+| get market depth    | `fun::rhea_dclv2::dclv2_get_marketdepth_fun_json::get_marketdepth`    | `rhea_dclv2_get_marketdepth_bin_json`          |
+| list liquidities    | `fun::rhea_dclv2::dclv2_list_liquidities_fun_json::list_liquidities`  | `rhea_dclv2_list_liquidities_bin_json`         |
+| list user assets    | `fun::rhea_dclv2::dclv2_list_user_assets_fun_json::list_user_assets`  | `rhea_dclv2_list_user_assets_bin_json`         |
+| add liquidity       | `fun::rhea_dclv2::dclv2_add_liquidity_fun_json::add_liquidity`        | `rhea_dclv2_add_liquidity_bin_json`            |
+| remove liquidity    | `fun::rhea_dclv2::dclv2_remove_liquidity_fun_json::remove_liquidity`  | `rhea_dclv2_remove_liquidity_bin_json`         |
+| predict remove      | `fun::rhea_dclv2::dclv2_predict_remove_liquidity_fun_json::predict_remove_liquidity` | `rhea_dclv2_predict_remove_liquidity_bin_json` |
+| withdraw            | `fun::rhea_dclv2::dclv2_withdraw_asset_fun_json::withdraw_asset`      | `rhea_dclv2_withdraw_asset_bin_json`           |
+| cancel order        | `fun::rhea_dclv2::dclv2_cancel_order_fun_json::cancel_order`          | `rhea_dclv2_cancel_order_bin_json`             |
+| storage deposit     | `fun::rhea_dclv2::dclv2_storage_deposit_fun_json::storage_deposit`    | `rhea_dclv2_storage_deposit_bin_json`          |
+| storage withdraw    | `fun::rhea_dclv2::dclv2_storage_withdraw_fun_json::storage_withdraw`  | `rhea_dclv2_storage_withdraw_bin_json`         |
+| storage unregister  | `fun::rhea_dclv2::dclv2_storage_unregister_fun_json::storage_unregister` | `rhea_dclv2_storage_unregister_bin_json`    |
+| deposit             | `fun::rhea_dclv2::ft_transfer_call::dclv2_deposit_fun_json::deposit`  | `rhea_dclv2_deposit_bin_json`                  |
+| swap                | `fun::rhea_dclv2::ft_transfer_call::dclv2_swap_ft_transfer_call_fun_json::swap` | `rhea_dclv2_swap_bin_json`          |
+| limit order         | `fun::rhea_dclv2::ft_transfer_call::dclv2_limit_order_fun_json::limit_order` | `rhea_dclv2_limit_order_bin_json`       |
+
+---
+
+#### READY-MADE RECIPES
+
+[recipes.md](./recipes.md) has the task shaped how-tos — add liquidity,
+swap, place a limit order, unwind a position — each one naming the exact
+functions and bins in order.
 
 ==========================
 <br/>
