@@ -253,6 +253,77 @@ the two values are the `amount_x` and `amount_y` you get back.
 
 ---
 
+### how do I claim the pool fees on my position?
+
+there is **no `claim_fee` method**. the fees are claimed by calling
+`remove_liquidity` with an `amount` of **`"0"`** — that claims the fees
+and removes **no** liquidity, so the position stays open.
+
+**1. read the claimable fees**
+
+```bash
+rhea_dclv2_get_liquidity_bin_json <lpt_id> <dcl_id>
+```
+
+```
+rhea_dclv2_get_liquidity_bin_json "batman-4.nearlytrade.near|wrap.near|10000#21093" dclv2.ref-labs.near
+-> lpt_id: "batman-4.nearlytrade.near|wrap.near|10000#21093"
+-> owner_id: "sleet.near"
+-> pool_id: "batman-4.nearlytrade.near|wrap.near|10000"
+-> left_point: 59600
+-> right_point: 62000
+-> amount: "4634247820975222057038"
+-> unclaimed_fee_x: "38246369033956797141701"
+-> unclaimed_fee_y: "14987240362909611765669050"
+```
+
+for every position at once:
+
+```bash
+rhea_dclv2_list_liquidities_bin_json <my_account> <from_index> <limit> <dcl_id>
+```
+
+**2. claim them**
+
+```bash
+rhea_dclv2_remove_liquidity_bin_json <lpt_id> 0 <dcl_id>
+```
+
+```
+rhea_dclv2_remove_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000#2549" 0 dclv2.ref-dev.testnet
+-> removed_amount "0"
+-> claim_fee_token_x "2"
+-> claim_fee_token_y "294998137750361"
+-> refund_token_x "2"
+-> refund_token_y "294998137750361"
+```
+
+the claimed fees land in the **internal balance**, so pull them out with
+`withdraw_asset` afterwards. the `unclaimed_fee_x` / `unclaimed_fee_y` of
+the position go back to `"0"` and start accumulating again.
+
+**the fees accrue only while the price trades through your range.** a
+position that sits entirely on one side of the current price earns
+nothing until a swap crosses it, and a position whose range the price has
+moved away from earns nothing either.
+
+#### the two liquidity views
+
+`get_liquidity` and `list_liquidities` answer with `unclaimed_fee_x` and
+`unclaimed_fee_y`. the **views** answer with `token_x` / `token_y` (the
+current token amount on each side) and `fee_x` / `fee_y` (the fees
+accrued on each side):
+
+```bash
+rhea_dclv2_list_liquidity_views_bin_json <my_account> <from_index> <limit> <dcl_id>
+```
+
+```bash
+rhea_dclv2_get_liquidity_view_bin_json <lpt_id> <dcl_id>
+```
+
+---
+
 ### how do I get my tokens back out?
 
 **1. check the internal balance**
