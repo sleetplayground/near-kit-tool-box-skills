@@ -65,6 +65,9 @@ most common mistake:
    swaps, internal-balance deposits and limit orders all work this way, and
    they live in [ft_transfer_call.md](./ft_transfer_call.md).
 
+beware of taxed tokens — some tokens take a cut on transfer, so a taxed
+token arrives at the DEX with less than you sent.
+
 the DEX has **no `swap` method, no `deposit` method and no `place_order`
 method**. those three flows are all `ft_transfer_call` on the token.
 
@@ -139,24 +142,6 @@ a pool's `point_delta` comes from its fee: 100→1, 400→8, 2000→40,
 `current_point` is generally not a multiple of `point_delta`, so round to
 it. read the live order points of a pool from `get_marketdepth` (the
 `orders` key) and pick one that already exists there.
-
----
-
-#### SOME TOKENS CHARGE A TAX
-
-a few tokens take a cut when they move through the DEX. it is the **token
-contract's** tax, not the DEX's, and the pool's own `tax` field stays
-`None` — read it with the token's `get_tax` view.
-
-- `batman-4.nearlytrade.near` — buy 100 bps, sell 100 bps (1%), only for
-  the pair `dclv2.ref-labs.near`
-- `bald.nearlytrade.near` — buy 200 bps, sell 200 bps (2%), same pair
-- `nearvember-337.meme-cooking.near`, `wrap.near`, `token.pumpopoly.near` —
-  no tax
-
-a taxed token takes its cut on **both** the fee payout and a swap, and the
-cut shows up as an `ft_transfer` to the token's own account with the memo
-`tax`.
 
 ---
 
