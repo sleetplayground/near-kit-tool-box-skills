@@ -944,6 +944,44 @@ depositing a token into the DEX uses the same call with a `Deposit` msg
 - gas: 1000 Tgas
 - attached deposit: 1 yoctoNEAR
 
+##### ft_transfer_call on the sell token - CALL (limit order)
+
+placing a limit order uses the same call on the **sell** token with a
+`LimitOrder` msg. A limit order that also fills immediately is
+`LimitOrderWithSwap`.
+
+```json
+{
+  "receiver_id": "dclv2.ref-labs.near",
+  "amount": "1000000000000000000000000",
+  "msg": "{\"LimitOrder\":{\"pool_id\":\"<token_x>|<token_y>|<fee>\",\"buy_token\":\"<token_bought>\",\"point\":286880,\"client_id\":\"\"}}"
+}
+```
+
+- `buy_token` is the token being bought, the one you do **not** send
+- `point` is the limit price point; it must be a multiple of the
+  pool's `point_delta` (fee 100→1, 400→8, 2000→40, 10000→200) **and**
+  sit on the correct side of `current_point` for the token being sold,
+  else the call fails with `E202: illegal point`. Selling `token_y`
+  wants a point below `current_point`; selling `token_x` wants one
+  above. Read the live order points of a pool from `get_marketdepth`
+  (the `orders` key) and pick one that already exists there
+- `client_id` is required — pass `""`
+- do **not** pass `referral_id: ""`; the contract parses it as an
+  account id and an empty string fails with `E600: invalid msg:
+  Error("the account ID is invalid")`. Omit the field entirely
+- gas: 300 Tgas for `LimitOrderWithSwap` (it runs a real swap first,
+  and the 180 Tgas of a plain swap runs out of prepaid gas after the
+  swap already succeeded)
+- attached deposit: 1 yoctoNEAR
+
+**The DEX must be an FT holder of the token.** Every inflow is an
+`ft_transfer_call` on the token into this contract, and a token
+contract refuses to transfer to an unregistered receiver — the call
+panics with `The account <dcl_id> is not registered` and the tokens are
+refunded. Check with `ft_storage_balance_of(<token>, <dcl_id>)`: a
+`null` means "not registered".
+
 ==========================
 <br/>
 copyright 2026 by sleet.near
