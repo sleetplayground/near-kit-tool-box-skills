@@ -298,9 +298,15 @@ rhea_dclv2_remove_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000#2549"
 -> refund_token_y "294998137750361"
 ```
 
-the claimed fees land in the **internal balance**, so pull them out with
-`withdraw_asset` afterwards. the `unclaimed_fee_x` / `unclaimed_fee_y` of
-the position go back to `"0"` and start accumulating again.
+the claimed fees go **straight to your wallet**, not the internal balance —
+the DEX transfers them out as part of the same call. the position's
+`unclaimed_fee_x` / `unclaimed_fee_y` go back to `"0"` and start
+accumulating again.
+
+the x side pays the token's **tax** on the way out, the y side does not. a
+claim of 38,246,369,033,956,797,141,701 BATMAN arrived as
+37,863,905,343,617,229,170,284 — the difference is a 1% tax, taken by the
+token contract, not by the DEX.
 
 **the fees accrue only while the price trades through your range.** a
 position that sits entirely on one side of the current price earns
