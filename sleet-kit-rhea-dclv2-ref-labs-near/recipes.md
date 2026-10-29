@@ -151,13 +151,51 @@ aligned points around it are 288760 and 288800.
 rhea_dclv2_add_liquidity_bin_json <pool_id> <left_point> <right_point> <amount_x> <amount_y> <dcl_id>
 ```
 
-```
-rhea_dclv2_add_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000" 288560 288760 0 1000000000000000000000 dclv2.ref-dev.testnet
--> liquidity_added, lpt_id "usdc.fakes.testnet|wrap.testnet|2000#2544"
-```
-
 pass `"0"` for the side the range does not use. the position is now
 known by its `lpt_id`.
+
+#### THE THREE RANGE SHAPES
+
+the shape of the range against `current_point` decides which token is
+needed, and how much of it. with `current_point` 288785 and `point_delta`
+40, the aligned range edges around it are 288760 (below) and 288800 (above).
+
+**a range entirely BELOW current point needs only `amount_y`** (the second
+token of the pool id):
+
+```bash
+rhea_dclv2_add_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000" 288560 288760 0 1000000000000000000000 dclv2.ref-dev.testnet
+-> liquidity_added, lpt_id "usdc.fakes.testnet|wrap.testnet|2000#2544"
+-> paid_token_x "0", paid_token_y "999999999999807010505"
+```
+
+**a range entirely ABOVE current point needs only `amount_x`** (the first
+token of the pool id):
+
+```bash
+rhea_dclv2_add_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000" 288800 288880 5000000 0 dclv2.ref-dev.testnet
+-> liquidity_added, lpt_id "usdc.fakes.testnet|wrap.testnet|2000#2546"
+-> paid_token_x "5000000", paid_token_y "0"
+```
+
+**a range that STRADDLES current point needs both**, and it takes much
+more of the second token than a single-sided range of the same width:
+
+```bash
+rhea_dclv2_add_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000" 288760 288800 5000000 40000000000000000000000 dclv2.ref-dev.testnet
+-> liquidity_added, lpt_id "usdc.fakes.testnet|wrap.testnet|2000#2547"
+-> paid_token_x "5000000", paid_token_y "32274009234898315497"
+```
+
+the straddling range took 0.0323 wrap for 5 usdc, where a single-sided
+range of the same width took a comparable amount of one side only. it
+only takes what it needs — the 0.04 wrap deposited was more than the
+0.0323 it used, and the surplus stayed in the internal balance.
+
+**deposit enough of both tokens before a two-sided add.** a two-sided
+range that is short on the second token fails with
+`E101: insufficient balance`, and the contract reports the amount it
+wanted in the `liquidity_added` event.
 
 > `predict_add_liquidity` is the read-only way to check what a range
 > needs, but it currently panics with
@@ -188,6 +226,17 @@ rhea_dclv2_remove_liquidity_bin_json "usdc.fakes.testnet|wrap.testnet|2000#2544"
 
 `amount` is the **liquidity amount**, not a token amount. the tokens land
 in the **internal balance**, so pull them out with `withdraw_asset`.
+
+the refund mirrors the deposit — a single-sided position gives back only
+the side it took, and a two-sided position gives back both:
+
+```
+# above-current, single sided on amount_x
+-> refund_token_x "4999999", refund_token_y "0"
+
+# below-current, single sided on amount_y
+-> refund_token_x "0", refund_token_y "999999999999807010504"
+```
 
 **check what you would get back first**
 
