@@ -1,3 +1,8 @@
+---
+name: sleet-kit-rhea-dclv2-ref-labs-near
+description: Documents the dclv2.ref-labs.near concentrated-liquidity DEX contract - the deployed contract id on mainnet and testnet, the three kinds of call it takes (a view, a contract method, or an ft_transfer_call on the token), each method's call type (VIEW or CALL), arguments, and required gas and attached deposit. Use this skill whenever the user mentions dclv2, ref-labs, the concentrated liquidity DEX, a DCL quote, add_liquidity or remove_liquidity by position, a DCL limit order, mint_v_liquidity or burn_v_liquidity, the DCL internal balance - including when they want to call or inspect this contract and need the method list, argument names, pool id and lpt id formats, the gas each flow needs, or the network-specific contract id.
+---
+
 # dclv2.ref-labs.near
 
 the ref-finance concentrated-liquidity dex v2 smart contract
@@ -134,6 +139,31 @@ a pool's `point_delta` comes from its fee: 100→1, 400→8, 2000→40,
 `current_point` is generally not a multiple of `point_delta`, so round to
 it. read the live order points of a pool from `get_marketdepth` (the
 `orders` key) and pick one that already exists there.
+
+---
+
+#### CAN A LIMITED ACCESS KEY CALL THIS CONTRACT?
+
+yes — a function-call key with `receiver_id` set to the DEX and an empty
+method list can call **every method of the DEX directly**: `add_liquidity`,
+`remove_liquidity`, `withdraw_asset`, `cancel_order`, the storage methods,
+and the rest.
+
+it cannot do the **token inflows** — `deposit`, `swap` and limit orders are
+`ft_transfer_call` on the **token** contract, and a function-call key is
+pinned to one receiver and cannot attach a deposit. those fail with
+`ReceiverMismatch` and `DepositWithFunctionCall`.
+
+a **method list** on the key narrows it further — a key restricted to
+`[quote, get_pool]` fails on any other method with `MethodNameMismatch`.
+
+the allowance is the limit on what a key can spend, so a key that has to
+attach a deposit needs an allowance above it. `storage_deposit` needs
+0.5 NEAR, and the allowance also has to cover the gas.
+
+adding a key with the same public key but a different method list does
+**not** replace the existing key — the account keeps the old permission. use
+a fresh key pair, or delete the old key first.
 
 ---
 

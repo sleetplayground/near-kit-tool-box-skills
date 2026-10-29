@@ -1,6 +1,9 @@
 ---
 name: sleet-kit-pool-near-staking
 description: Documents the NEAR validator staking-pool child contracts - how to resolve the per-validator pool account id, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions a staking pool, deposit_and_stake, get_pool_summary, staked or unstaked balances on a pool, or a pool account id like <validator>.pool.near - including when they want to call or inspect a staking pool and need the method list, argument names, or which pool id to use. For the pool.near factory contract that deploys these pools, use the factory skill instead.
+---
+
+
 # staking pools
 
 The standard NEAR validator staking-pool child contracts. There is no

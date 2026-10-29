@@ -1,6 +1,9 @@
 ---
 name: sleet-kit-wrap-near
 description: Documents the wrap.near wNEAR contract - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions wrap.near, wrap.testnet, wNEAR, wrapping or unwrapping NEAR, near_deposit, or near_withdraw, or asks what arguments a wrapping contract method takes - including when they want to call or inspect this contract and need the method list, argument names, or network-specific contract id.
+---
+
+
 # wrap.near
 
 the wrap.near wNEAR (NEP-141 wrapped NEAR) smart contract

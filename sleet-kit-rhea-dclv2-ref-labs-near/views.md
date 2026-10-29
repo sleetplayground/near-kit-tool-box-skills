@@ -468,3 +468,7 @@ in each token's smallest unit
 - no args necessary
 - gas: none — a view call is read-only and free
 - attached deposit: 0
+
+==========================
+<br/>
+copyright 2026 by sleet.near

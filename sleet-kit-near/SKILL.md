@@ -1,6 +1,9 @@
 ---
 name: sleet-kit-near
 description: Documents the near and testnet top-level-domain registrar / linkdrop contracts - the deployed contract id on mainnet and testnet, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions the near TLD registrar, testnet TLD, linkdrop, create_account on a TLD, claim, or new_account creation via the registrar - including when they want to call or inspect these contracts and need the method list, argument names, or network-specific contract id.
+---
+
+
 # near / testnet (TLD registrar + linkdrop)
 
 the `near` (mainnet) and `testnet` (testnet) top-level-domain

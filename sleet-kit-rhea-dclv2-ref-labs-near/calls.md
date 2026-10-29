@@ -362,3 +362,7 @@ the minimum from `storage_balance_bounds` is **not** enough in practice
 - arg format not documented yet
 - gas: not documented yet
 - attached deposit: not documented yet
+
+==========================
+<br/>
+copyright 2026 by sleet.near

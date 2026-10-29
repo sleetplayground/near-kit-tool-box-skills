@@ -1,6 +1,9 @@
 ---
 name: sleet-kit-ft
 description: Documents the NEP-141 / NEP-145 fungible token standard - the method names, call types (VIEW or CALL), exact argument shapes, and required gas and attached deposit shared by every FT contract (wNEAR, USDC, USDT, custom tokens). Use this skill whenever the user mentions an FT, fungible token, ft_transfer, ft_balance_of, ft_metadata, storage_deposit on a token contract, or asks what arguments a token transfer takes - including when they want to call or inspect a token contract and need the method list, argument names, or the standard NEP-141 shape. This is the standard itself, not one deployed contract, so there is no single contract id.
+---
+
+
 # NEP-141 / NEP-145 Fungible Token (FT)
 
 Generic helpers for any NEP-141 / NEP-145 fungible-token contract

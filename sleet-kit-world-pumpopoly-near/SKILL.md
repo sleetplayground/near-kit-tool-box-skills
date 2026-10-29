@@ -1,6 +1,9 @@
 ---
 name: sleet-kit-world-pumpopoly-near
 description: Documents the world.pumpopoly.near monopoly-style game contract - its mainnet contract id, and each method's call type (VIEW or CALL), exact argument shape, and required gas and attached deposit. Use this skill whenever the user mentions world.pumpopoly.near, pumpopoly, the monopoly game contract, view_player, view_players, move_player, or elite_move - including when they want to call or inspect this contract and need the method list, argument names, or contract id.
+---
+
+
 # world.pumpopoly.near
 
 the pumpopoly world.pumpopoly near monopoly-style game smart contract
