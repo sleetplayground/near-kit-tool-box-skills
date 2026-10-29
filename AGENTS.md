@@ -25,6 +25,7 @@ this is meant as a general guide. always verify that the methods and args are ri
 - see [TOOLS.md](./TOOLS.md) for the tool boxes, near cli and explorers the skills are sourced from
 - verify methods and args against `near contract inspect` before writing them down
 - keep the two tool boxes in sync when a contract method changes
+- the repo should only conatin truth, when adding or fixing something do not say what the lie or misconception was, only have what is true about a contract and it methods and how to interact with it.
 
 =====================
 <br/>
