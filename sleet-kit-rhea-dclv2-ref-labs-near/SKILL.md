@@ -27,12 +27,12 @@ CONTRACT ID PER NETWORK
 > A `pool_id` is a composite STRING, not a number:
 >
 > ```
-> <token_x_hash>|<token_y_hash_or_account>|<fee>
+> <token_x_account_id>|<token_y_account_id>|<fee>
 > ```
 >
 > for example
 > `a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near|wrap.near|2000`.
-> The pool id's first segment is the token x **hash**, not its account id.
+> Both segments are the tokens' NEAR account ids; `fee` is in basis points.
 >
 > An `lpt_id` is the pool id followed by the owner's liquidity index:
 >
