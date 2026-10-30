@@ -31,8 +31,14 @@ constants, contract id constants, and shared types alongside them.
 > sends that exact JSON. A typed contract is weaker evidence — it is
 > hand-written and has been wrong once — so anything taken from one is
 > marked as unconfirmed and should be checked against `near contract
-> inspect` before use. Anything with neither is recorded as **not
+inspect` before use. Anything with neither is recorded as **not
 > documented yet** rather than guessed.
+>
+> > A fun helper proves the **shape** of the arguments, not that the
+> > method exists. near-sdk only exports methods inside a `#[near]` impl
+> > block — a plain `pub fn` on the contract is not callable, so check
+> > the contract's own method list before documenting a method as
+> > callable.
 
 ---
 
@@ -74,15 +80,28 @@ format is not documented yet.
 # mainnet
 near contract inspect v2.ref-finance.near network-config mainnet now
 near contract inspect wrap.near network-config mainnet now
+near contract inspect sputnik-dao.near network-config mainnet now
+near contract inspect huggies.sputnik-dao.near network-config mainnet now
 
 # testnet
 near contract inspect ref-finance-101.testnet network-config testnet now
 near contract inspect wrap.testnet network-config testnet now
+near contract inspect sputnikovv2.testnet network-config testnet now
+near contract inspect genesis.sputnikv2.testnet network-config testnet now
 ```
 
 substitute the contract id for the one you need. for per-validator
 staking pools and per-user lockups, substitute the concrete account id
 — `<validator>.pool.near` or `<user>.lockup.near`.
+
+> `near contract inspect` reports the **build that account runs**, not
+> the newest build. daos deployed from the same factory can sit on
+> different builds, so check each account you intend to call.
+
+> some methods take their input as **raw bytes**, not JSON — the
+> Sputnik factory's `store`, the DAO's `store_blob`, and the DAO's
+> `update`. they do not appear in the contract's ABI, so
+> `near contract inspect` shows no argument shape for them.
 
 ---
 
@@ -99,7 +118,6 @@ the root of either host serves the full endpoint reference with
 request bodies and response shapes — read that rather than guessing.
 
 source: https://github.com/fastnear/explorer-api
-
 
 #### INTEAR API
 

@@ -22,7 +22,6 @@ tool box for near kit with custom web client and reusable functions
 
 see more at https://github.com/near-kit
 
-
 ---
 
 #### SKILLS
@@ -82,8 +81,9 @@ these skills are sourced from.
 > `slimedragon.near/xyk`.
 >
 > The Sputnik DAO set follows the same shape — `sputnik-dao/factory.md`
-> is the factory `sputnik-dao.near` that deploys the daos, and
-> `sputnik-dao/dao.md` is a dao itself at `<name>.sputnik-dao.near`.
+> is the factory `sputnik-dao.near` on mainnet and
+> `sputnikv2.testnet` on testnet, and `sputnik-dao/dao.md` is a dao
+> itself at `<name>.sputnik-dao.near` or `<name>.sputnikv2.testnet`.
 > The two are not interchangeable: calling the factory as if it were a
 > dao fails with a misleading `MethodNotFound` for every method.
 >

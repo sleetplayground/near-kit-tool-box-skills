@@ -64,6 +64,11 @@ returns the dao's `roles`, each with a `name`, a `kind`, the
 
 returns the dao contract's version, e.g. `2.3.1`
 
+> this is the crate version of the build, not the factory's
+> `[major, minor]` build number — a dao on the `[3,1]` build also
+> answers `2.3.1`. read the contract's code hash and match it against
+> the factory's `get_contracts_metadata` to know the build.
+
 ### get_proposals - VIEW
 
 ```json
@@ -78,9 +83,8 @@ returns the dao contract's version, e.g. `2.3.1`
 
 returns a page of proposals
 
-> a dao with no proposals answers with an empty list. on some rpc
-> endpoints it answers with a wasm failure that carries no result field
-> instead — read "no result" as "no proposals", not as a failure.
+> the page is clamped to the DAO's next proposal id, so a `limit` larger
+> than what remains returns fewer rows.
 
 ### get_proposal - VIEW
 
@@ -144,6 +148,9 @@ returns the DAO's latest 20 actions — `account_id`, `proposal_id`,
 - attached deposit: 0
 
 returns a page of bounties
+
+> the page is clamped to the DAO's next bounty id, so a `limit` larger
+> than what remains returns fewer rows.
 
 > the amount is in the token's own smallest unit and the contract does
 > not say how many decimals that is. NEAR is 24 decimals and most
@@ -212,14 +219,18 @@ returns the id the dao's **next** bounty will carry
 
 returns the NEAR the dao can spend, in yoctoNEAR
 
+> this is the account balance minus the protocol storage cost and minus
+> the bonds locked in proposal and bounty bonds.
+
 ### get_locked_storage_amount - VIEW
 
 - no args necessary
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
-returns the NEAR the dao holds for storage, in yoctoNEAR — the money
-it cannot spend
+returns the protocol storage cost the DAO's data occupies, in
+yoctoNEAR — `storage_byte_cost × storage_usage`. it is not the DAO's
+locked bond balance.
 
 ### get_staking_contract - VIEW
 
@@ -236,8 +247,10 @@ has none
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
-returns the `factory_id` that deployed the dao and whether it follows
-the factory's default code
+returns the `factory_id` that deployed the dao and `auto_update` —
+whether the factory is allowed to push an auto-update to this dao. when
+`auto_update` is on, a factory-driven update still needs a matching
+`UpgradeSelf` proposal that is at least two weeks old.
 
 ### delegation_balance_of - VIEW
 
@@ -263,21 +276,9 @@ returns the account's delegated voting power
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
-returns `[balance, ratio]`, the account's delegated voting power and
-its share of the dao's total
-
-### get_user_weight - VIEW
-
-```json
-{
-  "account_id": "sleet.near"
-}
-```
-
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
-returns the account's delegated voting weight
+returns `[balance, total]`, the account's delegated voting power and the
+DAO's total delegated voting power — the contract does not divide them
+into a ratio
 
 ### delegation_total_supply - VIEW
 
@@ -316,7 +317,11 @@ the crypto hash`.
 ```
 
 - gas: up to 100 Tgas is usually sufficient
-- attached deposit: exactly the DAO's current `proposal_bond`
+- attached deposit: exactly the DAO's current `proposal_bond` — the check is equality, so a larger deposit also fails with `ERR_MIN_BOND`
+- a `ChangePolicy` proposal whose `policy` is not a `Current` policy → `ERR_INVALID_POLICY`
+- a `Transfer` proposal with `token_id` = `""` (NEAR) and a non-null `msg` → `ERR_BASE_TOKEN_NO_MSG`
+- a `SetStakingContract` proposal when a staking contract is already set → `ERR_STAKING_CONTRACT_CANT_CHANGE`
+- a proposal kind the caller's roles do not permit → `ERR_PERMISSION_DENIED`
 
 ### act_proposal - CALL
 
@@ -329,15 +334,29 @@ the crypto hash`.
 }
 ```
 
-- `proposal` is mandatory and must exactly match the proposal kind stored for `id`
+- `proposal` is mandatory and must exactly match the proposal kind stored for `id` — otherwise `ERR_WRONG_KIND`
 - `action` is one of `RemoveProposal`, `VoteApprove`, `VoteReject`, `VoteRemove`, `Finalize`, or `MoveToHub`
+- `AddProposal` is not accepted as an action — `ERR_WRONG_ACTION`
 - `memo` is optional and only logged
+- voting on a proposal that is not `InProgress` → `ERR_PROPOSAL_NOT_READY_FOR_VOTE`
+- voting twice → `ERR_ALREADY_VOTED`
+- `Finalize` on a proposal that is neither expired nor failed → `ERR_PROPOSAL_NOT_EXPIRED_OR_FAILED`
+- an action the caller's roles do not permit → `ERR_PERMISSION_DENIED`
+- `RemoveProposal` deletes the proposal from storage; `MoveToHub` is accepted but is a no-op
 - gas: up to 100 Tgas is usually sufficient
 - attached deposit: 0
 
 ### on_proposal_callback - CALL
 
+```json
+{
+  "proposal_id": 0
+}
+```
+
 - private callback invoked by the DAO contract
+- asserts exactly one promise result (`ERR_UNEXPECTED_CALLBACK_PROMISES`)
+- flips the proposal to `Approved` and returns the bond, or to `Failed`
 - not intended to be called by a user
 
 ### bounty_claim - CALL
@@ -351,6 +370,9 @@ the crypto hash`.
 
 - `deadline` is a duration in nanoseconds and must not exceed the bounty's `max_deadline`
 - attached deposit: exactly the DAO's current `bounty_bond`
+- a bounty that is not there → `ERR_NO_BOUNTY`
+- claiming more times than the bounty's `times` → `ERR_BOUNTY_ALL_CLAIMED`
+- `deadline` greater than the bounty's `max_deadline` → `ERR_BOUNTY_WRONG_DEADLINE`
 
 ### bounty_done - CALL
 
@@ -362,7 +384,10 @@ the crypto hash`.
 }
 ```
 
-- `account_id` may be null to use the caller
+- `account_id` may be null to use the caller; when non-null it names the claim owner
+- while the claim is still active the caller must be that owner → `ERR_BOUNTY_DONE_MUST_BE_SELF`
+- once the claim has expired, anyone may call it to free the claim slot; no proposal is created and no bond is needed
+- an already-completed claim → `ERR_BOUNTY_CLAIM_COMPLETED`
 - attached deposit: exactly the DAO's current `proposal_bond`, because this call creates a proposal
 
 ### bounty_giveup - CALL
@@ -375,12 +400,26 @@ the crypto hash`.
 
 - attached deposit: 0
 - within the DAO's forgiveness period the bond is returned; after it, the bond is forfeited
+- the forgiveness period is measured from the claim's `start_time` — the block timestamp at which `bounty_claim` landed
 
 ### store_blob - CALL
 
-- the input is the raw blob bytes
+- the input is the raw blob bytes — a JSON body is stored verbatim as
+  the blob, it is not parsed
+- the same blob cannot be stored twice — `ERR_ALREADY_EXISTS`
 - attached deposit: at least the storage cost for the blob plus 32 bytes
 - returns the blob's base58 hash
+
+### update - CALL
+
+- the input is the raw new contract WASM, not JSON
+- callable by the account itself, or by its factory when the DAO's
+  `auto_update` is on
+- when the factory triggers it, the DAO first requires an `UpgradeSelf`
+  proposal whose hash matches the incoming code, and that proposal must
+  be at least two weeks old — otherwise a new `UpgradeSelf` proposal is
+  created and nothing is deployed
+- attached deposit: 0
 
 ### remove_blob - CALL
 
@@ -391,48 +430,74 @@ the crypto hash`.
 ```
 
 - only the account that stored the blob may remove it
+- a hash that is not there → `ERR_NO_BLOB`
 - attached deposit: 0
-- refunds the blob's storage cost
+- refunds `storage_byte_cost × (blob_len + 32)` to the original storer
 
 ### register_delegation - CALL
 
 ```json
 {
-  "account_id": "alice.testnet"
+  "account_id": "alice.near"
 }
 ```
 
 - callable only by the DAO's staking contract
+- the DAO must have a staking contract set — otherwise `ERR_NO_STAKING`
 - attached deposit: exactly the storage cost for 16 bytes
 
 ### delegate - CALL
 
 ```json
 {
-  "account_id": "alice.testnet",
+  "account_id": "alice.near",
   "amount": "1000000000000000000000000"
 }
 ```
 
 - callable only by the DAO's staking contract
+- the account must already be registered — `ERR_NOT_REGISTERED`
+- `amount` is a decimal string of yocto units
 - returns `[previous_amount, new_amount, total_delegated_amount]`
 
 ### undelegate - CALL
 
 ```json
 {
-  "account_id": "alice.testnet",
+  "account_id": "alice.near",
   "amount": "1000000000000000000000000"
 }
 ```
 
 - callable only by the DAO's staking contract
+- removing more than the delegated amount → `ERR_INVALID_STAKING_CONTRACT`
 - returns `[previous_amount, new_amount, total_delegated_amount]`
 
 ### migrate - CALL
 
 - private migration callback invoked during a contract upgrade
+- `init(ignore_state)` and `#[private]`
+- reads the stored state version and upgrades `V1` → `V2`; a V2 contract
+  re-reads its state as-is
 - not intended to be called by a user
+
+### new - CALL (init)
+
+```json
+{
+  "config": {
+    "name": "My DAO",
+    "purpose": "What the DAO does",
+    "metadata": ""
+  },
+  "policy": ["alice.near", "bob.near"]
+}
+```
+
+- only the factory calls this to bring a new DAO up
+- `policy` as an array is the `Default` policy form — the listed
+  accounts become the `council` role
+- attached deposit: 0
 
 ==========================
 <br/>

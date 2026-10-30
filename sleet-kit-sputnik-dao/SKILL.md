@@ -43,8 +43,19 @@ CONTRACT ID PER NETWORK
 > the factory and the dao are also different contracts with different
 > versions. the mainnet factory publishes five builds of the dao
 > contract — `[2,0]`, `[2,1]`, `[3,0]`, `[3,1]` and `[3,2]` — and a dao
-> can be pinned to an older one. the testnet factory publishes more
-> builds. read a dao's own `version` to know which build it runs.
+> can be pinned to an older one. the testnet factory publishes seven
+> builds — `[2,0]`, `[2,1]`, `[3,0]`, `[3,1]`, `[3,2]`, `[3,3]` and
+> `[3,31]`.
+>
+> > #### A DAO'S `version` IS NOT ITS BUILD
+> >
+> > the dao answers `version` with the **crate version** of the build it
+> > runs, e.g. `2.3.1`. that string does **not** identify the build: a
+> > dao on the `[3,1]` build also answers `2.3.1`. to know the build,
+> > read the dao's **code hash** and match it against the factory's
+> > `get_contracts_metadata` pairs. `near contract inspect <dao>` prints
+> > the code hash. the presence of `get_actions_log` or
+> > `contract_source_metadata` also identifies the `[3,2]` build.
 
 > #### THE ARGS ARE JSON
 >
@@ -74,7 +85,24 @@ CONTRACT ID PER NETWORK
 > ```sh
 > near contract inspect sputnik-dao.near network-config mainnet now
 > near contract inspect huggies.sputnik-dao.near network-config mainnet now
+> near contract inspect sputnikovv2.testnet network-config testnet now
+> near contract inspect genesis.sputnikv2.testnet network-config testnet now
 > ```
+>
+> > #### THE FACTORIES DIFFER
+> >
+> > the mainnet and testnet factories are different deployments with
+> > different method sets. the mainnet factory has
+> > `contract_source_metadata` and `store`; the testnet factory has
+> > `store_contract_self`, `remove_contract_self` and
+> > `on_remove_contract_self`, and no `contract_source_metadata`.
+>
+> > #### SOME METHODS TAKE RAW BYTES
+> >
+> > the factory's `store`, the DAO's `store_blob`, and the DAO's
+> > `update` take their input as **raw bytes**, not JSON. they do not
+> > appear in the contract's ABI, so `near contract inspect` shows no
+> > argument shape for them.
 
 ---
 

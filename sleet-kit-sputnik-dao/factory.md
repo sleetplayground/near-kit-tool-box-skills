@@ -29,7 +29,15 @@ CONTRACT ID PER NETWORK
 >
 > ```sh
 > near contract inspect sputnik-dao.near network-config mainnet now
+> near contract inspect sputnikovv2.testnet network-config testnet now
 > ```
+>
+> > the mainnet and testnet factories are **different deployments with
+> > different method sets**. the mainnet factory has
+> > `contract_source_metadata` and `store`; the testnet factory has
+> > `store_contract_self`, `remove_contract_self` and
+> > `on_remove_contract_self`, and no `contract_source_metadata`.
+> > always inspect the factory on the network you are calling.
 
 ### get_dao_list - VIEW
 
@@ -72,9 +80,9 @@ returns how many daos the factory has deployed
 
 returns the `[major, minor]` version the factory deploys new daos with
 
-> a dao can be pinned to an older version than this one, so the
-> factory's default and a dao's own `version` are worth reading
-> together.
+> the mainnet factory's default is `[3,2]`; the testnet factory's default
+> is `[3,31]`. a dao can be pinned to an older version than the
+> factory's default.
 
 ### get_default_code_hash - VIEW
 
@@ -93,6 +101,8 @@ returns the code hash the factory deploys new daos with
 returns the versions of the dao contract the factory knows about, as
 `[code_hash, metadata]` pairs — the code hash, the `version`, the
 source `commit_id` and the `changelog_url` of each
+
+> every published entry currently has `changelog_url` set to `null`.
 
 ### get_owner - VIEW
 
@@ -134,6 +144,8 @@ returns the account that owns the factory
 ```
 
 - returns raw WASM bytes, not JSON
+- gas: none — a view call is read-only and free
+- attached deposit: 0
 
 ### delete_contract - CALL
 
@@ -151,7 +163,9 @@ returns the account that owns the factory
 
 - the input is the raw DAO contract WASM, not JSON
 - owner only
-- attached deposit: at least 11 times the contract's storage cost
+- attached deposit: at least 11× the stored contract's storage cost —
+  1× for the factory's local copy and 10× for the global-contract
+  registration. the factory asserts `attached_deposit >= that amount`.
 
 ### store_contract_metadata - CALL
 
@@ -191,9 +205,15 @@ returns the account that owns the factory
 }
 ```
 
-- attached deposit: at least 10 mNEAR; more is needed to fund the new DAO
+- `name` is a bare sub-account name, not a full account id — the DAO is
+  created as `<name>.<factory>`
+- attached deposit: at least 10 mNEAR. the whole deposit is transferred
+  to the new DAO account, so it must also cover the DAO's own storage —
+  budget several NEAR for a usable DAO
 - the decoded `args` are `{ "config": { ... }, "policy": [ ... ] }`
-- creation is asynchronous; the DAO is listed after the `on_create` callback succeeds
+- creation is asynchronous; the DAO is listed after the `on_create`
+  callback succeeds, and a failed initialization refunds the deposit to
+  the caller
 
 ### update - CALL
 
@@ -210,7 +230,38 @@ returns the account that owns the factory
 
 ### on_create - CALL
 
+```json
+{
+  "account_id": "my-dao.sputnik-dao.near",
+  "attached_deposit": "10000000000000000000000000",
+  "predecessor_account_id": "alice.near"
+}
+```
+
 - private callback the factory runs when it deploys a DAO
+- returns `true` when the DAO was registered in the list, `false` when
+  creation failed and the deposit was refunded
+- not intended to be called by a user
+
+### store_contract_self - CALL
+
+- testnet factory only
+- the testnet factory keeps a copy of a contract's own code
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### remove_contract_self - CALL
+
+- testnet factory only
+- arg format not documented yet
+- gas: not documented yet
+- attached deposit: not documented yet
+
+### on_remove_contract_self - CALL
+
+- testnet factory only
+- private callback
 - not intended to be called by a user
 
 ==========================
