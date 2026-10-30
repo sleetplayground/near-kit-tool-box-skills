@@ -147,6 +147,38 @@ strings. `votes` maps an account id to `Approve`, `Reject`, `Remove` or
 
 all 128-bit amounts are decimal strings in yocto units.
 
+> #### A `FunctionCall` PROPOSAL
+>
+> a `FunctionCall` proposal names the contract to call and the methods
+> to call on it:
+>
+> ```json
+> {
+>   "FunctionCall": {
+>     "receiver_id": "target.contract.near",
+>     "actions": [
+>       {
+>         "method_name": "some_method",
+>         "args": "eyJmb28iOiJiYXIifQ==",
+>         "deposit": "0",
+>         "gas": "30000000000000"
+>       }
+>     ]
+>   }
+> }
+> ```
+>
+> `args` are the target method's arguments as **base64-encoded bytes**,
+> `deposit` and `gas` are decimal strings in yoctoNEAR and yoctoGas.
+>
+> the policy label for this proposal kind is `call`, not
+> `FunctionCall` — a role needs `call:*` or `call:VoteApprove` before
+> the proposal can even be created.
+>
+> the DAO only runs the call after the proposal is approved, and the
+> approval lands in the `on_proposal_callback` receipt — not in the
+> receipt of the vote that triggered it.
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

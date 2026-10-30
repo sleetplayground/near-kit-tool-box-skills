@@ -323,6 +323,11 @@ the crypto hash`.
 - a `SetStakingContract` proposal when a staking contract is already set → `ERR_STAKING_CONTRACT_CANT_CHANGE`
 - a proposal kind the caller's roles do not permit → `ERR_PERMISSION_DENIED`
 
+> a `FunctionCall` proposal's action `args` are the target method's
+> arguments as **base64-encoded bytes**. the toolbox's
+> `sputnik_dao_add_function_call_proposal_fun_json` helper takes plain
+> JSON and base64-encodes it for you.
+
 ### act_proposal - CALL
 
 ```json
