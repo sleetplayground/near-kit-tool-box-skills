@@ -14,19 +14,18 @@ see [SKILL.md](./SKILL.md) for the shared types.
 CONTRACT ID PER NETWORK
 
 - MAINNET: sputnik-dao.near
-- TESTNET: (none — mainnet only)
+- TESTNET: sputnikv2.testnet
 
 > #### ARG EXAMPLES
 >
 > The JSON blocks below are **worked examples**, not values to copy
-> verbatim. Treat them as a template for argument *shape* only, and
+> verbatim. Treat them as a template for argument _shape_ only, and
 > substitute the caller's own values.
 >
 > #### SOURCE
 >
-> the factory's `contract_source_metadata` reports version `0.2.1`,
-> built from commit `2b0f34a3860460f285307ec2ccf36345acbe05a2` of
-> `near-daos/sputnik-dao-contract`.
+> the factory's `get_contracts_metadata` reports each stored DAO build's
+> version, source commit, and changelog URL.
 >
 > ```sh
 > near contract inspect sputnik-dao.near network-config mainnet now
@@ -103,48 +102,116 @@ source `commit_id` and the `changelog_url` of each
 
 returns the account that owns the factory
 
-### contract_source_metadata - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
-
 ### set_owner - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "owner_id": "alice.near"
+}
+```
+
+- owner only
+- attached deposit: 0
 
 ### set_default_code_hash - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "code_hash": "11111111111111111111111111111111"
+}
+```
 
-### get_code - CALL
+- owner only
+- the hash must already be stored
+- attached deposit: 0
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+### get_code - VIEW
+
+```json
+{
+  "code_hash": "11111111111111111111111111111111"
+}
+```
+
+- returns raw WASM bytes, not JSON
 
 ### delete_contract - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "code_hash": "11111111111111111111111111111111"
+}
+```
+
+- owner only
+- the default contract cannot be deleted
+- attached deposit: 0
+
+### store - CALL
+
+- the input is the raw DAO contract WASM, not JSON
+- owner only
+- attached deposit: at least 11 times the contract's storage cost
 
 ### store_contract_metadata - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "code_hash": "11111111111111111111111111111111",
+  "metadata": {
+    "version": [3, 2],
+    "commit_id": "2b0f34a3860460f285307ec2ccf36345acbe05a2",
+    "changelog_url": null
+  },
+  "set_default": true
+}
+```
+
+- owner only
+- the code hash must already be stored
+- attached deposit: 0
+
+### delete_contract_metadata - CALL
+
+```json
+{
+  "code_hash": "11111111111111111111111111111111"
+}
+```
+
+- owner only
+- attached deposit: 0
+
+### create - CALL
+
+```json
+{
+  "name": "my-dao",
+  "args": "<base64-encoded DAO new() JSON>"
+}
+```
+
+- attached deposit: at least 10 mNEAR; more is needed to fund the new DAO
+- the decoded `args` are `{ "config": { ... }, "policy": [ ... ] }`
+- creation is asynchronous; the DAO is listed after the `on_create` callback succeeds
+
+### update - CALL
+
+```json
+{
+  "account_id": "my-dao.sputnik-dao.near",
+  "code_hash": "11111111111111111111111111111111"
+}
+```
+
+- callable by the factory owner or the DAO itself
+- the DAO must have been created by this factory
+- attached deposit: 0
 
 ### on_create - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
-- the callback the factory runs when it deploys a dao
+- private callback the factory runs when it deploys a DAO
+- not intended to be called by a user
 
 ==========================
 <br/>

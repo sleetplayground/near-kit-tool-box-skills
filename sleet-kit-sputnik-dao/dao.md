@@ -14,12 +14,15 @@ see [SKILL.md](./SKILL.md) for the shared types and the factory.
 CONTRACT ID PER NETWORK
 
 - MAINNET: `<name>.sputnik-dao.near`
-- TESTNET: (none — mainnet only)
+- TESTNET: `<name>.sputnikv2.testnet`
+
+> a DAO's contract version is independent of the factory's default
+> version. read the DAO's own `version` to know which methods it has.
 
 > #### ARG EXAMPLES
 >
 > The JSON blocks below are **worked examples**, not values to copy
-> verbatim. Treat them as a template for argument *shape* only, and
+> verbatim. Treat them as a template for argument _shape_ only, and
 > substitute the caller's own values. A `Transfer` proposal moves real
 > funds — never reuse the example values as though they were the
 > user's intent.
@@ -60,12 +63,6 @@ returns the dao's `roles`, each with a `name`, a `kind`, the
 - attached deposit: 0
 
 returns the dao contract's version, e.g. `2.3.1`
-
-### contract_source_metadata - VIEW
-
-- no args necessary
-- gas: none — a view call is read-only and free
-- attached deposit: 0
 
 ### get_proposals - VIEW
 
@@ -124,8 +121,11 @@ returns the id the dao's **next** proposal will carry
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
-returns every action the dao has recorded — `account_id`,
-`proposal_id`, `action` and `block_height`
+returns the DAO's latest 20 actions — `account_id`, `proposal_id`,
+`action` and `block_height`
+
+> the actions are `AddProposal`, `RemoveProposal`, `VoteApprove`,
+> `VoteReject`, `VoteRemove`, `Finalize` and `MoveToHub`.
 
 > a proposal is not a transaction. the contract stores the proposal's
 > record and this trail of actions, but it does not store the
@@ -266,6 +266,19 @@ returns the account's delegated voting power
 returns `[balance, ratio]`, the account's delegated voting power and
 its share of the dao's total
 
+### get_user_weight - VIEW
+
+```json
+{
+  "account_id": "sleet.near"
+}
+```
+
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns the account's delegated voting weight
+
 ### delegation_total_supply - VIEW
 
 - no args necessary
@@ -288,68 +301,138 @@ returns the total delegated voting power the dao has
 returns whether the dao holds a blob with that hash
 
 > base58, not base64. a base64 hash panics with `base58 decoding
-> error`, and the wrong number of bytes panics with `invalid length of
-> the crypto hash`.
+error`, and the wrong number of bytes panics with `invalid length of
+the crypto hash`.
 
 ### add_proposal - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "proposal": {
+    "description": "Signal",
+    "kind": "Vote"
+  }
+}
+```
+
+- gas: up to 100 Tgas is usually sufficient
+- attached deposit: exactly the DAO's current `proposal_bond`
 
 ### act_proposal - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "id": 0,
+  "action": "VoteApprove",
+  "proposal": "Vote",
+  "memo": null
+}
+```
+
+- `proposal` is mandatory and must exactly match the proposal kind stored for `id`
+- `action` is one of `RemoveProposal`, `VoteApprove`, `VoteReject`, `VoteRemove`, `Finalize`, or `MoveToHub`
+- `memo` is optional and only logged
+- gas: up to 100 Tgas is usually sufficient
+- attached deposit: 0
 
 ### on_proposal_callback - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+- private callback invoked by the DAO contract
+- not intended to be called by a user
 
 ### bounty_claim - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "id": 0,
+  "deadline": "3600000000000"
+}
+```
+
+- `deadline` is a duration in nanoseconds and must not exceed the bounty's `max_deadline`
+- attached deposit: exactly the DAO's current `bounty_bond`
 
 ### bounty_done - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "id": 0,
+  "account_id": null,
+  "description": "Bounty complete"
+}
+```
+
+- `account_id` may be null to use the caller
+- attached deposit: exactly the DAO's current `proposal_bond`, because this call creates a proposal
 
 ### bounty_giveup - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "id": 0
+}
+```
+
+- attached deposit: 0
+- within the DAO's forgiveness period the bond is returned; after it, the bond is forfeited
 
 ### store_blob - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+- the input is the raw blob bytes
+- attached deposit: at least the storage cost for the blob plus 32 bytes
+- returns the blob's base58 hash
 
 ### remove_blob - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "hash": "11111111111111111111111111111111"
+}
+```
+
+- only the account that stored the blob may remove it
+- attached deposit: 0
+- refunds the blob's storage cost
 
 ### register_delegation - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+```json
+{
+  "account_id": "alice.testnet"
+}
+```
+
+- callable only by the DAO's staking contract
+- attached deposit: exactly the storage cost for 16 bytes
+
+### delegate - CALL
+
+```json
+{
+  "account_id": "alice.testnet",
+  "amount": "1000000000000000000000000"
+}
+```
+
+- callable only by the DAO's staking contract
+- returns `[previous_amount, new_amount, total_delegated_amount]`
+
+### undelegate - CALL
+
+```json
+{
+  "account_id": "alice.testnet",
+  "amount": "1000000000000000000000000"
+}
+```
+
+- callable only by the DAO's staking contract
+- returns `[previous_amount, new_amount, total_delegated_amount]`
 
 ### migrate - CALL
 
-- arg format not documented yet
-- gas: not documented yet
-- attached deposit: not documented yet
+- private migration callback invoked during a contract upgrade
+- not intended to be called by a user
 
 ==========================
 <br/>
