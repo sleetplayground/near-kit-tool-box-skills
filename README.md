@@ -10,6 +10,16 @@ personal skill library for interacting with near blockchain and smart contracts.
 <br/>
 ℹ️ nice to have a clean source of truth
 
+
+```sh
+# add
+bunx skills add sleetplayground/near-kit-tool-box-skills
+# --list
+bunx skills add sleetplayground/near-kit-tool-box-skills --list
+```
+
+---
+
 #### THINGS I AM BUILDING
 
 **near-kit-tool-box**
