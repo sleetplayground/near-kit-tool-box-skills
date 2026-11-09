@@ -305,6 +305,23 @@ whether the factory is allowed to push an auto-update to this dao. when
 `auto_update` is on, a factory-driven update still needs a matching
 `UpgradeSelf` proposal that is at least two weeks old.
 
+### contract_source_metadata - VIEW
+
+- no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns the contract's own build metadata — its `version`, the `link` to
+its source, the `standards` it implements and its `build_info`.
+
+> the method is not the contract's own — near-sdk 5.24 provides it on
+> every contract that carries the `nep330` standard. the dao answers
+> with its crate version, e.g. `2.3.1`, which is not the factory's
+> `[major, minor]` build number.
+>
+> the toolbox's `sputnik_dao_contract_source_metadata_fun_json` helper
+> reads it.
+
 ### delegation_balance_of - VIEW
 
 ```json

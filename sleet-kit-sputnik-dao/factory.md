@@ -112,6 +112,23 @@ source `commit_id` and the `changelog_url` of each
 
 returns the account that owns the factory
 
+### contract_source_metadata - VIEW
+
+- no args necessary
+- gas: none — a view call is read-only and free
+- attached deposit: 0
+
+returns the factory's own build metadata — its `version`, the `link` to
+its source, the `standards` it implements and its `build_info`.
+
+> the method is not the contract's own — near-sdk 5.24 provides it on
+> every contract that carries the `nep330` standard. the factory answers
+> with its own crate version, `0.2.1` on mainnet, which says nothing
+> about which build of the dao contract it deploys — `get_default_version`
+> answers that.
+>
+> the mainnet factory has this method. the testnet factory does not.
+
 ### set_owner - CALL
 
 ```json
