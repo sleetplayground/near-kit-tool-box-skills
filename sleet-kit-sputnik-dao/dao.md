@@ -56,6 +56,59 @@ flagLogo }`, the dao's own site branding.
 returns the dao's `roles`, each with a `name`, a `kind`, the
 `permissions` the role grants and its `vote_policy`.
 
+> #### WHAT THE POLICY DECIDES
+>
+> `get_policy` is what tells you whether a call will succeed, and the
+> two calls it governs read different fields.
+>
+> `add_proposal` and `act_proposal` need the **deposit** and the
+> **permission**. the deposit must equal `proposal_bond` — a per-dao
+> value, read it, never guess it. `huggies.sputnik-dao.near` has a
+> `proposal_bond` of `0`, `onsocial.sputnik-dao.near` has
+> `100000000000000000000000`. the check is equality, so a deposit that
+> is too large fails the same way a small one does.
+>
+> a permission is written `<proposal kind>:<action>`, so the prefix is
+> the kind of the proposal and not the method being called. a role with
+> `call:VoteApprove` may approve a `Vote` proposal; a role with
+> `transfer:VoteApprove` may approve a `Transfer` one. the proposal
+> kind's label is not always its name — `FunctionCall` is `call`,
+> `ChangeConfig` is `config`, `Vote` is `vote`, `SetStakingContract`
+> is `set_vote_token`.
+>
+> a permission matches on any of four forms — `<kind>:<action>`,
+> `<kind>:*`, `*:<action>`, or `*:*`. so `call:*` covers every action
+> on a `FunctionCall` proposal and `*:VoteApprove` covers approving any
+> kind of proposal. `onsocial.sputnik-dao.near` gives its `council`
+> role `call:*` and `vote:*`, so that role alone can both propose and
+> vote.
+>
+> `act_proposal` must also carry the proposal's **kind** unchanged —
+> the whole payload, not just the label. for a `Transfer` that is the
+> `token_id`, `receiver_id`, `amount` and `msg` as they are stored, so
+> read the proposal first and pass its `kind` through as it is.
+
+> #### HOW THE VOTES COUNT
+>
+> a proposal's `vote_counts` is keyed by **role**, one entry per role
+> that voted, each a `[yes, no, spam]` triple.
+>
+> a vote counts once for **each** role of the voter that permits the
+> action on that proposal's kind. so an account in two roles that both
+> permit it is counted twice, once under each role — the roles are
+> what the threshold is measured against, not the people. the
+> threshold for a role is its own `vote_policy` for that kind, and the
+> `default_vote_policy` when the role has none.
+>
+> `default_vote_policy.threshold` is a `[for, against]` pair — for
+> `onsocial.sputnik-dao.near` it is `[1, 2]`, so one vote for and two
+> against reject. a role's own `vote_policy` threshold is a plain
+> count, `"1"`. a dao can answer both forms. a role's threshold wins
+> over the default for that role.
+>
+> a role of kind `Everyone` is skipped — it has no members to count,
+> so it never carries a threshold.
+
 ### version - VIEW
 
 - no args necessary

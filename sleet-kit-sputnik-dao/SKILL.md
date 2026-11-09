@@ -1,6 +1,6 @@
 ---
 name: sleet-kit-sputnik-dao
-description: Documents the Sputnik DAO V2 contracts - the factories sputnik-dao.near on mainnet and sputnikovv2.testnet on testnet, and a dao itself at <name>.sputnik-dao.near or <name>.sputnikv2.testnet - the contract ids, the difference between factory and dao, and each method's call type (VIEW or CALL) and argument shape. Use this skill whenever the user mentions sputnik-dao, Sputnik DAO, a dao account like huggies.sputnik-dao.near, get_policy, get_proposals, add_proposal, get_dao_list, or a DAO treasury - including when they want to call or inspect these contracts and need the method list, the argument names, or which account is the factory and which is a dao.
+description: Documents the Sputnik DAO V2 contracts - the factories sputnik-dao.near on mainnet and sputnikv2.testnet on testnet, and a dao itself at <name>.sputnik-dao.near or <name>.sputnikv2.testnet - the contract ids, the difference between factory and dao, each method's call type (VIEW or CALL) and argument shape, and how a dao's policy decides what a member may propose and vote on. Use this skill whenever the user mentions sputnik-dao, Sputnik DAO, a dao account like huggies.sputnik-dao.near, get_policy, get_proposals, add_proposal, act_proposal, get_dao_list, the proposal bond, or a DAO treasury - including when they want to call or inspect these contracts and need the method list, the argument names, the deposit a call needs, which account is the factory and which is a dao.
 ---
 
 # Sputnik DAO
@@ -115,6 +115,23 @@ everyone name no accounts at all.
 so the member list is the union of the roles' member lists, and an
 account in three roles is **one** member, not three. summing the
 roles' member counts reads 6 for a dao with 2 people.
+
+---
+
+#### WHAT A DAO LETS YOU DO
+
+the policy decides both **whether** a call succeeds and **how much** it
+costs. a permission is written `<proposal kind>:<action>`, so the
+prefix is the kind of the proposal, not the method called —
+`call:VoteApprove` approves a `Vote` proposal, `transfer:VoteApprove`
+approves a `Transfer` one. a permission also matches on `<kind>:*`,
+`*:VoteApprove` or `*:*`.
+
+`add_proposal` and `act_proposal` need a deposit equal to the dao's
+`proposal_bond`, read from `get_policy` — it is a per-dao value and
+the check is equality, so too much fails as loudly as too little.
+
+the details are in [dao.md](./dao.md).
 
 ---
 
