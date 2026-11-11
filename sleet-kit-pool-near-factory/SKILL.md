@@ -78,6 +78,15 @@ CONTRACT ID PER NETWORK
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
+---
+
+#### SOURCE
+
+- https://github.com/referencedev/staking-farm/tree/master/staking-factory
+
+the legacy factory is
+`github.com/near/core-contracts/tree/master/staking-pool-factory`.
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

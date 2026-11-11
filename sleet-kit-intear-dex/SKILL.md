@@ -158,6 +158,27 @@ the engine's `contract_source_metadata` view for the commit the
 near contract inspect dex.intear.near network-config mainnet now
 ```
 
+---
+
+#### LINKS
+
+- https://intear.tech — the site
+- https://docs.intear.tech — the docs
+- https://api.intea.rs — the api
+- https://explorer.near.org/accounts/dex.intear.near — the engine
+  account on the explorer
+
+---
+
+#### THE MIDDLEMAN PACKAGES
+
+the api has typed clients in the middleman packages:
+
+- https://github.com/sleet-js/middleman/tree/main/middleman-intear-api
+- https://github.com/sleet-js/middleman/tree/main/middleman-intear-dex-api
+- https://www.npmjs.com/package/@sleet-js/middleman-intear-api
+- https://www.npmjs.com/package/@sleet-js/middleman-intear-dex-api
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

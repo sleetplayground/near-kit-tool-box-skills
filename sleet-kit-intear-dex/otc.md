@@ -238,7 +238,7 @@ registers the key that may sign the caller's trade intents.
 
 #### SOURCE
 
-- https://github.com/INTEARnear/dex/tree/main/dexes/otc
+- https://github.com/INTEARnear/dex/tree/d2a55aeb416b79da8f67aef066d5defb314c3e99/dexes/otc
 
 ```sh
 # the engine's method list — the dex's own methods are not on the

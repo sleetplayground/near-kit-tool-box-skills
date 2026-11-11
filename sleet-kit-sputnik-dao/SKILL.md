@@ -78,6 +78,8 @@ CONTRACT ID PER NETWORK
 
 > #### SOURCE
 >
+> - https://github.com/near-daos/sputnik-dao-contract
+>
 > the dao contract is `sputnikdao2`, from `near-daos/sputnik-dao-contract`.
 > the factory's `get_contracts_metadata` reports each stored DAO build's
 > version, source commit, and changelog URL.
@@ -195,6 +197,14 @@ all 128-bit amounts are decimal strings in yocto units.
 > the DAO only runs the call after the proposal is approved, and the
 > approval lands in the `on_proposal_callback` receipt — not in the
 > receipt of the vote that triggered it.
+
+---
+
+#### LINKS
+
+- https://explorer.near.org/accounts/sputnik-dao.near — the factory on
+  the explorer
+- https://gov.near.org — the near governance forum
 
 ==========================
 <br/>

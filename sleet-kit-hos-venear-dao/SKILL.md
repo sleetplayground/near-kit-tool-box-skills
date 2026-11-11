@@ -177,6 +177,19 @@ This contract deploys each user's lockup sub-account (e.g.
 
 - no args necessary
 
+---
+
+#### SOURCE
+
+- https://github.com/houseofstake/house-of-stake-contracts/tree/main/venear-contract
+
+---
+
+#### LINKS
+
+- https://houseofstake.org — the site
+- https://gov.houseofstake.org — the governance forum
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

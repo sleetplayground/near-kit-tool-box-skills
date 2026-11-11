@@ -223,6 +223,23 @@ at `https://api.protocol-pawns.com`:
 the api has no auth and is read-only for the chain — it cannot place a
 bet.
 
+---
+
+#### SOURCE
+
+- https://github.com/Protocol-Pawns/chess-on-chain
+
+| file                                  | what it holds                                     |
+| ------------------------------------- | ------------------------------------------------- |
+| `crates/chess-lib/src/ft_receiver.rs` | the `Bet` message and the token whitelist check    |
+| `crates/chess-lib/src/bet.rs`         | the bet rules, the limits, the errors, the events  |
+| `crates/chess-lib/src/internal.rs`    | the bet locking, the fees and the payout maths     |
+| `crates/chess-lib/src/lib.rs`         | the `cancel_bet` and `withdraw_token` methods      |
+
+the limits live in `crates/chess-lib/src/lib.rs` as `MAX_OPEN_BETS`
+(10), `MAX_BETS_PER_GAME` (250), `MAX_OPEN_GAMES` (5) and
+`MAX_OPEN_CHALLENGES` (25).
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

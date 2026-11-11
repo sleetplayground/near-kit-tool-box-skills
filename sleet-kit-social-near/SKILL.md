@@ -155,6 +155,32 @@ CONTRACT ID PER NETWORK
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/NearSocial/social-db
+
+the social contract is `social.near`, from `NearSocial/social-db`.
+
+---
+
+#### LINKS
+
+- https://near.social — the site
+- https://api2.near.social — the api
+- https://explorer.near.org/accounts/social.near — the contract on the
+  explorer
+
+---
+
+#### THE MIDDLEMAN PACKAGE
+
+the api has a typed client in the middleman package:
+
+- https://github.com/sleet-js/middleman/tree/main/middleman-near-social-api
+- https://www.npmjs.com/package/@sleet-js/middleman-near-social-api
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

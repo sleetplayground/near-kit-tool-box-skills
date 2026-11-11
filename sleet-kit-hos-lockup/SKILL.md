@@ -146,6 +146,21 @@ on `venear.dao` before calling anything here.
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/houseofstake/house-of-stake-contracts/tree/main/lockup-contract
+
+the lockup contract is deployed per user at `<user>.lockup.near`.
+
+---
+
+#### LINKS
+
+- https://houseofstake.org — the site
+- https://gov.houseofstake.org — the governance forum
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

@@ -204,6 +204,67 @@ points are earned from quests and achievements, and are claimed with
 `claim_points`. points earned during a wager or a bet flow land as
 pending points and are claimed the same way.
 
+---
+
+#### SOURCE
+
+- https://github.com/Protocol-Pawns/chess-on-chain
+
+the contract is `crates/chess`, the shared logic is `crates/chess-lib`
+and the shared types are `crates/chess-common`. the files that hold the
+argument shapes for this skill:
+
+| file                                        | what it holds                            |
+| ------------------------------------------- | ---------------------------------------- |
+| `crates/chess-lib/src/view.rs`              | the view methods and their arguments      |
+| `crates/chess-lib/src/lib.rs`               | the call methods and their arguments      |
+| `crates/chess-lib/src/ft_receiver.rs`       | the `Bet`, `Challenge`, `AcceptChallenge` and `Matchmaking` messages |
+| `crates/chess-lib/src/bet.rs`               | the bet rules, the limits and the errors  |
+| `crates/chess-lib/src/internal.rs`          | the bet locking and the payout maths      |
+| `crates/chess-common/src/lib.rs`            | the `GameId`, the events and the shapes   |
+
+---
+
+#### LINKS
+
+- https://protocol-pawns.com — the landing page
+- https://app.protocol-pawns.com — the app, and the bets page at
+  https://app.protocol-pawns.com/bets
+- https://app.protocol-pawns.com/.well-known/ai/skill.md — the agent
+  skill, the upstream guide for agents
+- https://app.protocol-pawns.com/llms.txt — the llms file
+- https://api.protocol-pawns.com — the indexed api
+- https://api.protocol-pawns.com/doc — the api docs
+- https://explorer.near.org/accounts/app.chess-game.near — the account
+  on the explorer
+- https://rpc.shitzuapes.xyz — the rpc the upstream skill points at
+- https://t.me/protocolpawns — the telegram
+- https://gov.near.org/t/approved-protocol-pawns-gaming-dao/38514 — the
+  approved gaming dao proposal
+
+---
+
+#### THE MIDDLEMAN PACKAGE
+
+the indexed api has a typed client in the middleman package:
+
+- https://github.com/sleet-js/middleman/tree/main/middleman-protocol-pawns-api
+- https://www.npmjs.com/package/@sleet-js/middleman-protocol-pawns-api
+
+it covers the api — the games, the moves, the challenges, the bets, the
+leaderboards and the event stream. it is read-only for the chain: it
+cannot place a bet or a move, because those are near transactions
+against the contract.
+
+---
+
+#### THE METHOD LIST
+
+```sh
+# the authoritative method list
+near contract inspect app.chess-game.near network-config mainnet now
+```
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

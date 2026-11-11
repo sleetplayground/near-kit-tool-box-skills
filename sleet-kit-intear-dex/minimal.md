@@ -76,7 +76,7 @@ asserts that they are the same, *"since this dex is a no-op"*.
 
 #### SOURCE
 
-- https://github.com/INTEARnear/dex/tree/main/dexes/minimal
+- https://github.com/INTEARnear/dex/tree/d2a55aeb416b79da8f67aef066d5defb314c3e99/dexes/minimal
 
 ```sh
 # the engine's method list — the dex's own methods are not on the

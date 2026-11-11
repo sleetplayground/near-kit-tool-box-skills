@@ -202,6 +202,26 @@ in the `near-kit-tool-box-rs` crate:
 swap, place a limit order, unwind a position — each one naming the exact
 functions and bins in order.
 
+---
+
+#### LINKS
+
+- https://rhea.finance — the site
+- https://app.rhea.finance — the app
+- https://guide.rhea.finance — the guide
+- https://api.rhea.finance — the api
+- https://explorer.near.org/accounts/dclv2.ref-labs.near — the contract
+  on the explorer
+
+---
+
+#### THE MIDDLEMAN PACKAGE
+
+the api has a typed client in the middleman package:
+
+- https://github.com/sleet-js/middleman/tree/main/middleman-rhea-api
+- https://www.npmjs.com/package/@sleet-js/middleman-rhea-api
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

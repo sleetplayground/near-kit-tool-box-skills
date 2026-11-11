@@ -201,6 +201,19 @@ near contract inspect factory.v10.meme-cooking.testnet network-config testnet no
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+the contract source is not published. the docs are at
+https://github.com/Shitzu-Apes/meme-cooking-docs
+
+---
+
+#### LINKS
+
+- https://meme.cooking — the site
+- https://docs.meme.cooking — the docs
 
 ==========================
 <br/>

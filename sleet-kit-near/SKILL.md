@@ -117,6 +117,14 @@ allows the given public key to claim the attached balance
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
+---
+
+#### SOURCE
+
+- https://github.com/near/near-linkdrop
+
+the same `near-linkdrop` source is compiled for each network.
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

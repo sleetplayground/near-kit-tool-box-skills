@@ -296,6 +296,17 @@ near contract inspect linear-protocol.near network-config mainnet now
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/linear-protocol/LiNEAR/tree/main/contracts/linear
+
+---
+
+#### LINKS
+
+- https://linearprotocol.org — the site
 
 ==========================
 <br/>

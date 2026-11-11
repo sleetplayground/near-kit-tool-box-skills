@@ -384,6 +384,18 @@ near contract inspect meta-pool.near network-config mainnet now
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/Meta-Pool/liquid-staking-contract
+
+---
+
+#### LINKS
+
+- https://metapool.app — the site
+- https://docs.metapool.app — the docs
 
 ==========================
 <br/>

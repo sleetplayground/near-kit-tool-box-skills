@@ -149,7 +149,7 @@ amounts to take out of the pool's first and second asset.
 
 #### SOURCE
 
-- https://github.com/INTEARnear/dex/tree/main/dexes/simple-amm
+- https://github.com/INTEARnear/dex/tree/d2a55aeb416b79da8f67aef066d5defb314c3e99/dexes/simple-amm
 
 ```sh
 # the engine's method list — the dex's own methods are not on the

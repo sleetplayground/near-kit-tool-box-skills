@@ -189,6 +189,13 @@ CONTRACT ID PER NETWORK
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
+---
+
+#### LINKS
+
+- https://pumpopoly.com — the site
+- https://near.pumpopoly.com — the app
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

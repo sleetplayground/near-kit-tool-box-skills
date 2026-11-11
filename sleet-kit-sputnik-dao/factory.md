@@ -24,6 +24,8 @@ CONTRACT ID PER NETWORK
 >
 > #### SOURCE
 >
+> - https://github.com/near-daos/sputnik-dao-contract
+>
 > the factory's `get_contracts_metadata` reports each stored DAO build's
 > version, source commit, and changelog URL.
 >

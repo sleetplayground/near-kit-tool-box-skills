@@ -325,6 +325,19 @@ otherwise:
 Internal callback, initializer, upgrade, and cross-contract plumbing is
 omitted here — those are never called directly.
 
+---
+
+#### LINKS
+
+- https://app.ref.finance — the app
+- https://explorer.near.org/accounts/v2.ref-finance.near — the
+  contract on the explorer
+
+the api has a typed client in the middleman package:
+
+- https://github.com/sleet-js/middleman/tree/main/middleman-rhea-api
+- https://www.npmjs.com/package/@sleet-js/middleman-rhea-api
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

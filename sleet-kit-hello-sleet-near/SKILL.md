@@ -38,6 +38,19 @@ CONTRACT ID PER NETWORK
 - gas: 3 Tgas
 - attached deposit: 0
 
+---
+
+#### SOURCE
+
+- https://github.com/sleetplayground/sleet_rust_hello — the rust
+  contract this skill documents
+
+---
+
+#### LINKS
+
+- https://sleet-js.near.page — the site
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

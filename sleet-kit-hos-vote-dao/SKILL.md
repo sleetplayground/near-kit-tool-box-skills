@@ -126,6 +126,18 @@ CONTRACT ID PER NETWORK
 
 - arg format not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/houseofstake/house-of-stake-contracts/tree/main/voting-contract
+
+---
+
+#### LINKS
+
+- https://gov.houseofstake.org — the governance forum
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

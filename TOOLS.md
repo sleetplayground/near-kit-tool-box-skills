@@ -70,6 +70,34 @@ inspect — they run as wasm inside the engine.
 
 ---
 
+#### PROTOCOL PAWNS SOURCE
+
+the chess skill is sourced from the contract's own source repository.
+
+-🐱 GIT: https://github.com/Protocol-Pawns/chess-on-chain
+
+`crates/chess` is the contract, `crates/chess-lib` holds the logic —
+`view.rs` the views, `lib.rs` the calls, `ft_receiver.rs` the `Bet` and
+`Challenge` messages, `bet.rs` the bet rules, `internal.rs` the locking
+and the payout maths — and `crates/chess-common` holds the shared types.
+
+the indexed api behind the app is at `api.protocol-pawns.com`, and the
+typed client for it is the `middleman-protocol-pawns-api` package in the
+middleman repo.
+
+> #### BETS ARE TOKEN TRANSFERS
+>
+> the contract has no `place_bet` method. a bet is an `ft_transfer_call`
+> on the token contract, with the chess contract as the `receiver_id`
+> and the bet inside `msg`. the same is true of the wagered challenge
+> and the wagered matchmaking entry.
+>
+> the `Bet` message is
+> `{"Bet":{"players":[...],"winner":"..."}}`, and only the whitelisted
+> tokens are accepted.
+
+---
+
 #### NEAR CLI
 
 inspect a live contract for its authoritative method list and
@@ -82,6 +110,7 @@ near contract inspect v2.ref-finance.near network-config mainnet now
 near contract inspect wrap.near network-config mainnet now
 near contract inspect sputnik-dao.near network-config mainnet now
 near contract inspect huggies.sputnik-dao.near network-config mainnet now
+near contract inspect app.chess-game.near network-config mainnet now
 
 # testnet
 near contract inspect ref-finance-101.testnet network-config testnet now
@@ -125,6 +154,33 @@ the base url is `https://api.intea.rs`, no api key. every page of the
 docs is also markdown, at its url with `.md` in place of the trailing
 slash — <https://docs.intear.tech/api/llms-full.txt> has all of them in
 one file.
+
+---
+
+#### THE LINKS IN A SKILL
+
+a skill ends with up to three sections that point at the things
+around a contract.
+
+| section              | what it holds                                                     |
+| -------------------- | ----------------------------------------------------------------- |
+| `#### SOURCE`        | the contract's own source repository, and the files inside it      |
+| `#### LINKS`         | the site, the app, the api, the explorer, the docs, the forum     |
+| `#### THE MIDDLEMAN PACKAGE` | the typed client for that protocol's api, when one exists |
+
+a skill gets a `SOURCE` section when the contract's source is public.
+when it is not, the section says so rather than staying silent — the
+meme cooking contract is not open source, and the ref finance and rhea
+contracts are not published either.
+
+a source link is pinned to a commit when the path on `main` can move.
+the INTEAR sub-dex links are pinned to the commit the deployed wasm
+was built from, so they keep pointing at the code that is live.
+
+a skill gets a `MIDDLEMAN PACKAGE` section when the middleman repo
+holds a typed client for that protocol's api. the middleman clients are
+read-only for the chain — they read an indexed api, they cannot call a
+contract.
 
 ---
 

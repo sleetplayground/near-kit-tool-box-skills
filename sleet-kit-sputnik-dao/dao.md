@@ -29,6 +29,8 @@ CONTRACT ID PER NETWORK
 >
 > #### SOURCE
 >
+> - https://github.com/near-daos/sputnik-dao-contract
+>
 > the dao contract is `sputnikdao2`, from `near-daos/sputnik-dao-contract`.
 > a dao answers `version` with the build it runs — `2.3.1` for the
 > current one.

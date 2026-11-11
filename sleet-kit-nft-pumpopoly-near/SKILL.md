@@ -202,6 +202,13 @@ omitted.
 - gas: not documented yet
 - attached deposit: not documented yet
 
+---
+
+#### LINKS
+
+- https://pumpopoly.com — the site
+- https://near.pumpopoly.com — the app
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

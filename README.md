@@ -107,6 +107,13 @@ these skills are sourced from.
 > are `ft_transfer_call` on the token contract rather than methods on
 > the chess contract.
 >
+> Each skill also links the things around the contract: a **SOURCE**
+> section for the contract's own source repository, a **LINKS** section
+> for the site, the app, the api, the explorer and the forum, and a
+> **MIDDLEMAN PACKAGE** section for the typed client of that
+> protocol's api, when one exists. see [TOOLS.md](./TOOLS.md) for the
+> convention.
+>
 > Skills marked with an **ARG AND GAS** note have no verified fun
 > helper yet, so they list methods by name and call type only.
 

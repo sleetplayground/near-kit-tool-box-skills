@@ -111,6 +111,21 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 - gas: 50 Tgas
 - attached deposit: 1 yoctoNEAR
 
+---
+
+#### SOURCE
+
+- https://github.com/near/NEPs — the NEP-141 and NEP-145 standards
+- https://github.com/near/near-sdk-rs/tree/master/examples/fungible-token —
+  the reference implementation
+
+---
+
+#### LINKS
+
+- https://explorer.near.org/accounts/wrap.near — the wrapped near
+  account on the explorer
+
 ==========================
 <br/>
 copyright 2026 by sleet.near

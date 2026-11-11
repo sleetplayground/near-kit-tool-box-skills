@@ -394,7 +394,7 @@ only the dex's owner may set the signer.
 
 #### SOURCE
 
-- https://github.com/INTEARnear/dex/tree/main/dexes/xyk
+- https://github.com/INTEARnear/dex/tree/d2a55aeb416b79da8f67aef066d5defb314c3e99/dexes/xyk
 - the argument and response types live in
   `dexes/xyk/types/src/lib.rs`
 

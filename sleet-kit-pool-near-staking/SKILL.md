@@ -338,6 +338,15 @@ CONTRACT ID PER NETWORK
 - gas: not documented yet
 - attached deposit: not documented yet
 
+---
+
+#### SOURCE
+
+- https://github.com/referencedev/staking-farm/tree/master/staking-farm
+
+the legacy pool is
+`github.com/near/core-contracts/tree/master/staking-pool`.
+
 ==========================
 <br/>
 copyright 2026 by sleet.near
