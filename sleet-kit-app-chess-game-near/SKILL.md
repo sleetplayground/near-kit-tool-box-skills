@@ -235,8 +235,6 @@ argument shapes for this skill:
 - https://app.protocol-pawns.com/llms.txt — the llms file
 - https://api.protocol-pawns.com — the indexed api
 - https://api.protocol-pawns.com/doc — the api docs
-- https://explorer.near.org/accounts/app.chess-game.near — the account
-  on the explorer
 - https://rpc.shitzuapes.xyz — the rpc the upstream skill points at
 - https://t.me/protocolpawns — the telegram
 - https://gov.near.org/t/approved-protocol-pawns-gaming-dao/38514 — the

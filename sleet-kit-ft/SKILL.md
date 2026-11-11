@@ -119,13 +119,6 @@ returns `{ total, available }` — both yoctoNEAR decimal strings
 - https://github.com/near/near-sdk-rs/tree/master/examples/fungible-token —
   the reference implementation
 
----
-
-#### LINKS
-
-- https://explorer.near.org/accounts/wrap.near — the wrapped near
-  account on the explorer
-
 ==========================
 <br/>
 copyright 2026 by sleet.near

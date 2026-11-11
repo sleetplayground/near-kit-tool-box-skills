@@ -210,8 +210,6 @@ functions and bins in order.
 - https://app.rhea.finance — the app
 - https://guide.rhea.finance — the guide
 - https://api.rhea.finance — the api
-- https://explorer.near.org/accounts/dclv2.ref-labs.near — the contract
-  on the explorer
 
 ---
 

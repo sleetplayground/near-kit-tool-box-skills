@@ -169,8 +169,6 @@ the social contract is `social.near`, from `NearSocial/social-db`.
 
 - https://near.social — the site
 - https://api2.near.social — the api
-- https://explorer.near.org/accounts/social.near — the contract on the
-  explorer
 
 ---
 

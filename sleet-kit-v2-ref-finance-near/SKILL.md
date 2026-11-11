@@ -330,8 +330,6 @@ omitted here — those are never called directly.
 #### LINKS
 
 - https://app.ref.finance — the app
-- https://explorer.near.org/accounts/v2.ref-finance.near — the
-  contract on the explorer
 
 the api has a typed client in the middleman package:
 

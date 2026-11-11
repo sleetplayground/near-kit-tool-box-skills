@@ -123,13 +123,6 @@ CONTRACT ID PER NETWORK
 - gas: none — a view call is read-only and free
 - attached deposit: 0
 
----
-
-#### LINKS
-
-- https://explorer.near.org/accounts/wrap.near — the contract on
-  the explorer
-
 ==========================
 <br/>
 copyright 2026 by sleet.near

@@ -202,8 +202,6 @@ all 128-bit amounts are decimal strings in yocto units.
 
 #### LINKS
 
-- https://explorer.near.org/accounts/sputnik-dao.near — the factory on
-  the explorer
 - https://gov.near.org — the near governance forum
 
 ==========================

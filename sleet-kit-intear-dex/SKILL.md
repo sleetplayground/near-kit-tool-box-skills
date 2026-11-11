@@ -165,8 +165,6 @@ near contract inspect dex.intear.near network-config mainnet now
 - https://intear.tech — the site
 - https://docs.intear.tech — the docs
 - https://api.intea.rs — the api
-- https://explorer.near.org/accounts/dex.intear.near — the engine
-  account on the explorer
 
 ---
 
