@@ -265,18 +265,19 @@ opponent.
 ```
 
 - `min_elo` and `max_elo` are the rating range of the opponent to
-  match. the fields are required
+  match. the fields are required, and they are floats
 - the caller must be registered, and must not already be in a
   challenge or in the queue
 - the queue holds **200 entries**
 - gas: 30 Tgas
-- attached deposit: 0.01 NEAR
+- attached deposit: 0
 
-the deposit is the storage for the queue entry. it is refunded when the
-entry is matched or cancelled.
+the call takes **no deposit**. it is not payable, so an attached deposit
+is rejected.
 
 to join the queue **with a wager**, use an `ft_transfer_call` on the
-token instead — see [bets.md](./bets.md).
+token instead — that is the path that carries a token deposit — see
+[bets.md](./bets.md).
 
 ### cancel_matchmaking - CALL
 

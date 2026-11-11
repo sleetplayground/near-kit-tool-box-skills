@@ -102,6 +102,10 @@ the columns are a–h and the rows are 1–8, counted from white's side.
     **1 yoctoNEAR**
 - an **`ft_transfer_call`** attaches exactly 1 yoctoNEAR
 
+`join_matchmaking` attaches **nothing** — it is not payable. a **wagered**
+queue entry goes through `ft_transfer_call` on the token contract
+instead, and that is the path that carries a token deposit.
+
 the gas follows the work the call does:
 
 | flow                    | gas    |
