@@ -97,7 +97,8 @@ the columns are a–h and the rows are 1–8, counted from white's side.
   and the token methods:
   - `storage_deposit` attaches at least **0.05 NEAR**, the storage cost
   - `storage_withdraw` and `storage_unregister` attach exactly
-    **1 yoctoNEAR**
+    **1 yoctoNEAR** — but the contract does not implement either one,
+    the calls fail with `OperationNotSupported`
   - `set_is_agent` and `withdraw_token` attach exactly
     **1 yoctoNEAR**
 - an **`ft_transfer_call`** attaches exactly 1 yoctoNEAR

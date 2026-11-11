@@ -82,7 +82,7 @@ not change how the contract behaves.
 
 ### storage_withdraw - CALL
 
-withdraws the storage balance of the caller.
+not implemented — the call fails with `OperationNotSupported`.
 
 ```json
 {
@@ -93,6 +93,10 @@ withdraws the storage balance of the caller.
 - `amount` is optional
 - gas: 30 Tgas
 - attached deposit: 1 yoctoNEAR
+
+the contract's `internal_storage_withdraw` returns
+`ContractError::OperationNotSupported` for every call, so no storage
+balance can ever be withdrawn this way.
 
 ### storage_unregister - CALL
 
