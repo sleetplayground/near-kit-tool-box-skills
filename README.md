@@ -64,6 +64,9 @@ these skills are sourced from.
 - [sleet-kit-meta-pool-near/SKILL.md](./sleet-kit-meta-pool-near/SKILL.md)
 - [sleet-kit-meme-cooking-near/SKILL.md](./sleet-kit-meme-cooking-near/SKILL.md)
 - [sleet-kit-app-chess-game-near/SKILL.md](./sleet-kit-app-chess-game-near/SKILL.md)
+  - [views.md](./sleet-kit-app-chess-game-near/views.md)
+  - [calls.md](./sleet-kit-app-chess-game-near/calls.md)
+  - [bets.md](./sleet-kit-app-chess-game-near/bets.md)
 - [sleet-kit-intear-dex/SKILL.md](./sleet-kit-intear-dex/SKILL.md)
   - [engine.md](./sleet-kit-intear-dex/engine.md)
   - [xyk.md](./sleet-kit-intear-dex/xyk.md)
@@ -96,6 +99,13 @@ these skills are sourced from.
 > itself at `<name>.sputnik-dao.near` or `<name>.sputnikv2.testnet`.
 > The two are not interchangeable: calling the factory as if it were a
 > dao fails with a misleading `MethodNotFound` for every method.
+>
+> The Protocol Pawns chess set follows the same shape —
+> `app-chess-game-near/views.md` holds the read methods,
+> `app-chess-game-near/calls.md` the state-changing ones, and
+> `app-chess-game-near/bets.md` the betting and wagering flows, which
+> are `ft_transfer_call` on the token contract rather than methods on
+> the chess contract.
 >
 > Skills marked with an **ARG AND GAS** note have no verified fun
 > helper yet, so they list methods by name and call type only.
