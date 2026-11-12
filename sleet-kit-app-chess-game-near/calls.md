@@ -272,7 +272,11 @@ opponent.
   match. the fields are required, and they are floats
 - the caller must be registered, and must not already be in a
   challenge or in the queue
-- the queue holds **200 entries**
+- the queue holds **500 entries**
+- a queue entry **expires after one hour**, and the expired entries
+  are purged lazily — when the queue is next walked
+- the elo test is **mutual**: the joiner's band and the queued
+  player's band must both accept the other player
 - gas: 30 Tgas
 - attached deposit: 0
 

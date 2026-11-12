@@ -144,7 +144,7 @@ stat at zero.
 | open challenges per account      | 25    |
 | open bets per bettor             | 10    |
 | bets per game                    | 250   |
-| matchmaking queue entries        | 200   |
+| matchmaking queue entries        | 500   |
 | blocks before a player may cancel their own game | ~3 days |
 | blocks before anyone may cancel a game | ~14 days |
 
