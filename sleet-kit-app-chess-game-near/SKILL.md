@@ -77,16 +77,22 @@ into the path.
 `play_move` takes **coordinate notation**, not san. `"Nf3"` and
 `"Qxe4"` fail.
 
-| form                | example      |
-| ------------------- | ------------ |
-| compact             | `"e2e4"`     |
-| separated           | `"e2 e4"`    |
-| explicit            | `"e2 to e4"` |
-| kingside castle     | `"O-O"`      |
-| queenside castle    | `"O-O-O"`    |
-| promotion           | `"e7 to e8 Q"` |
+| form                | example          |
+| ------------------- | ---------------- |
+| compact             | `"e2e4"`         |
+| separated           | `"e2 e4"`        |
+| explicit            | `"e2 to e4"`     |
+| kingside castle     | `"O-O"`          |
+| queenside castle    | `"O-O-O"`        |
+| promotion           | `"e7 to e8 queen"` |
 
 the columns are a–h and the rows are 1–8, counted from white's side.
+
+**a promotion spells the piece out in full.** `"e7 to e8 queen"`,
+`"e7 to e8 rook"`, `"e7 to e8 bishop"` and `"e7 to e8 knight"` are
+the forms that work. `"e7 to e8 Q"` is refused with `invalid piece
+name`, and a promotion without the spaces — `"e7e8q"` — is refused
+with `invalid move`.
 
 ---
 

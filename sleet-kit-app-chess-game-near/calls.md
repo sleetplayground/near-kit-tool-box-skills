@@ -146,7 +146,8 @@ plays a move in a game.
 
 - `mv` is **coordinate notation**, not san. the accepted forms are
   `"e2e4"`, `"e2 e4"`, `"e2 to e4"`, `"O-O"`, `"O-O-O"` and a promotion
-  like `"e7 to e8 Q"`
+  like `"e7 to e8 queen"` — the piece is spelled out in full, so
+  `"e7 to e8 Q"` is refused with `invalid piece name`
 - gas: 50 Tgas for `Easy`, 150 Tgas for `Medium` or a human game,
   250 Tgas for `Hard`, 400 Tgas for `VeryHard`
 - attached deposit: 0
